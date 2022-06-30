@@ -36,6 +36,15 @@ public class PublicationServiceImpl implements PublicationService {
 	}
 
 	@Override
+	public List<PublicationDto> getPaginatedPublications(int page, int size) {
+		log.info("Get paginated publications");
+		return publicationRepository.getPaginatedPublications(page, size)
+				.stream()
+				.map(PublicationMapper.INSTANCE::mapPublicationToPublicationDto)
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public PublicationDto createPublication(PublicationDto publicationDto) {
 		log.info("Create publication {}", publicationDto);
 		Publication publication = PublicationMapper.INSTANCE.mapPublicationDtoToPublication(publicationDto);

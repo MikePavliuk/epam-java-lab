@@ -9,6 +9,8 @@ public interface PublicationService {
 
 	List<PublicationDto> getAllPublications();
 
+	List<PublicationDto> getPaginatedPublications(int page, int size);
+
 	PublicationDto createPublication(PublicationDto publicationDto);
 
 	PublicationDto updatePublication(Long id, PublicationDto publicationDto);
