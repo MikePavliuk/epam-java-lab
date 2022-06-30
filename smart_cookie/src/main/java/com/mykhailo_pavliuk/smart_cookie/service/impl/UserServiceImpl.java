@@ -2,9 +2,7 @@ package com.mykhailo_pavliuk.smart_cookie.service.impl;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
 import com.mykhailo_pavliuk.smart_cookie.mapper.UserMapper;
-import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
-import com.mykhailo_pavliuk.smart_cookie.repository.SubscriptionRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,15 @@ public class UserServiceImpl implements UserService {
 	public List<UserDto> getAllUsers() {
 		log.info("Get all users");
 		return userRepository.getUsers()
+				.stream()
+				.map(UserMapper.INSTANCE::mapUserToUserDto)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<UserDto> getPaginatedUsers(int page, int size) {
+		log.info("Get paginated users");
+		return userRepository.getPaginatedUsers(page, size)
 				.stream()
 				.map(UserMapper.INSTANCE::mapUserToUserDto)
 				.collect(Collectors.toList());

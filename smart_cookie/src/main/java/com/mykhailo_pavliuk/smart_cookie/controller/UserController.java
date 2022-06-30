@@ -36,6 +36,14 @@ public class UserController {
 		return userService.getAllUsers();
 	}
 
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping()
+	public List<UserDto> getPaginatedUsers(@RequestParam("page") int page,
+											  @RequestParam("size") int size) {
+		log.info("Get {} users on {} page", size, page);
+		return userService.getPaginatedUsers(page, size);
+	}
+
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping()
 	public UserDto createUser(@RequestBody UserDto userDto) {
@@ -71,7 +79,5 @@ public class UserController {
 		log.info("Add funds to user with email {} in amount of {}", email, amount);
 		return userService.addFunds(email, amount);
 	}
-
-
 
 }

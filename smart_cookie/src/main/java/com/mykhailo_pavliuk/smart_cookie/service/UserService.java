@@ -11,6 +11,8 @@ public interface UserService {
 
 	List<UserDto> getAllUsers();
 
+	List<UserDto> getPaginatedUsers(int page, int size);
+
 	UserDto createUser(UserDto user);
 
 	UserDto updateUser(String email, UserDto user);
