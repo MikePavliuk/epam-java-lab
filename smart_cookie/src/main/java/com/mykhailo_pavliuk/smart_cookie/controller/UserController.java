@@ -57,7 +57,7 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping("/{email}/subscribe")
-	public UserDto subscribeUserToPublication(@PathVariable String email, @RequestBody Subscription subscription) {
+	public UserDto addSubscriptionToUser(@PathVariable String email, @RequestBody Subscription subscription) {
 		log.info("Subscribe user with email {} to publication with id {}", email, subscription.getPublicationId());
 		return userService.addSubscriptionToUser(email, subscription);
 	}
