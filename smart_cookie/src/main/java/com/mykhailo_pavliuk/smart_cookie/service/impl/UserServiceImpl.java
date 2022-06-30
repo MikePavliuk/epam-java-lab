@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,15 @@ public class UserServiceImpl implements UserService {
 		Subscription newSubscription = subscriptionRepository.createSubscription(subscription);
 		user.getSubscriptions().add(newSubscription);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
+	}
+
+	@Override
+	public UserDto addFunds(String userEmail, BigDecimal amount) {
+		log.info("Add funds");
+		User user = userRepository.getUser(userEmail);
+		user.getUserDetail().setBalance(user.getUserDetail().getBalance().add(amount));
+		User updatedUser = userRepository.updateUser(userEmail, user);
+		return UserMapper.INSTANCE.mapUserToUserDto(updatedUser);
 	}
 
 }

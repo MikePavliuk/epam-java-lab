@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -61,6 +62,14 @@ public class UserController {
 		log.info("Subscribe user with email {} to publication with id {}", email, subscription.getPublicationId());
 		return userService.addSubscriptionToUser(email, subscription);
 	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@PatchMapping("/{email}/add-funds")
+	public UserDto addFundsToUser(@PathVariable String email, @RequestParam BigDecimal amount) {
+		log.info("Add funds to user with email {} in amount of {}", email, amount);
+		return userService.addFunds(email, amount);
+	}
+
 
 
 }
