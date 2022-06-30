@@ -58,10 +58,10 @@ public class UserController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/{uEmail}/subscribe")
-	public UserDto subscribeUserToPublication(@PathVariable String uEmail, @RequestBody Subscription subscription) {
-		log.info("Subscribe user with email {} to publication with id {}", uEmail, subscription.getPublicationId());
-		return subscriptionService.createSubscription(uEmail, subscription);
+	@PostMapping("/{email}/subscribe")
+	public UserDto subscribeUserToPublication(@PathVariable String email, @RequestBody Subscription subscription) {
+		log.info("Subscribe user with email {} to publication with id {}", email, subscription.getPublicationId());
+		return subscriptionService.createSubscription(email, subscription);
 	}
 
 }
