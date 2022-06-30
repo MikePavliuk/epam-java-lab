@@ -41,7 +41,7 @@ public class PublicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/{id}")
-	public PublicationDto updateUser(@PathVariable Long id, @RequestBody PublicationDto publicationDto) {
+	public PublicationDto updatePublication(@PathVariable Long id, @RequestBody PublicationDto publicationDto) {
 		log.info("Update publication by id {}", id);
 		log.trace("Request body publicationDto {}", publicationDto);
 		return publicationService.updatePublication(id, publicationDto);
@@ -49,7 +49,7 @@ public class PublicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+	public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
 		log.info("Delete publication by id {}", id);
 		publicationService.deletePublication(id);
 		return ResponseEntity.noContent().build();
