@@ -9,9 +9,9 @@ public interface PublicationService {
 
 	List<PublicationDto> getAllPublications();
 
-	PublicationDto createPublication(PublicationDto publication);
+	PublicationDto createPublication(PublicationDto publicationDto);
 
-	PublicationDto updatePublication(Long id, PublicationDto publication);
+	PublicationDto updatePublication(Long id, PublicationDto publicationDto);
 
 	void deletePublication(Long id);
 }
