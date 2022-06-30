@@ -9,6 +9,6 @@ import org.mapstruct.factory.Mappers;
 public interface PublicationMapper {
 	PublicationMapper INSTANCE = Mappers.getMapper(PublicationMapper.class);
 
-	PublicationDto mapPublicationToPublicationMapper(Publication publication);
+	PublicationDto mapPublicationToPublicationDto(Publication publication);
 	Publication mapPublicationDtoToPublication(PublicationDto publicationDto);
 }
