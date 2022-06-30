@@ -30,6 +30,7 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public List<User> getPaginatedUsers(int page, int size) {
+		log.info("Get paginated users");
 		// TODO
 		return null;
 	}
