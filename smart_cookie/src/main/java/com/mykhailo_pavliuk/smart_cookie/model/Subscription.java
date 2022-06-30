@@ -8,6 +8,8 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class Subscription {
+    private Long userId;
+    private Long publicationId;
     private LocalDate startDate;
     private Integer periodInMonths;
 }

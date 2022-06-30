@@ -1,6 +1,8 @@
 package com.mykhailo_pavliuk.smart_cookie.controller;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
+import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
+import com.mykhailo_pavliuk.smart_cookie.service.SubscriptionService;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import java.util.List;
 public class UserController {
 
 	private final UserService userService;
+	private final SubscriptionService subscriptionService;
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/{email}")
@@ -52,6 +55,13 @@ public class UserController {
 		log.info("Delete user by email {}", email);
 		userService.deleteUser(email);
 		return ResponseEntity.noContent().build();
+	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping("/{uEmail}/subscribe")
+	public UserDto subscribeUserToPublication(@PathVariable String uEmail, @RequestBody Subscription subscription) {
+		log.info("Subscribe user with email {} to publication with id {}", uEmail, subscription.getPublicationId());
+		return subscriptionService.createSubscription(uEmail, subscription);
 	}
 
 }
