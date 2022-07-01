@@ -9,8 +9,6 @@ public interface UserRepository {
 
 	List<User> getUsers();
 
-	List<User> getPaginatedUsers(int page, int size);
-
 	User createUser(User user);
 
 	User updateUser(String email, User user);

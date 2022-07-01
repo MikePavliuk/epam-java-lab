@@ -30,13 +30,6 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 	}
 
 	@Override
-	public List<Publication> getPaginatedPublications(int page, int size) {
-		log.info("Get paginated publications");
-		// TODO
-		return null;
-	}
-
-	@Override
 	public Publication createPublication(Publication publication) {
 		log.info("Create publication {}", publication);
 		list.add(publication);

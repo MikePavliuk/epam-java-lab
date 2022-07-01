@@ -29,13 +29,6 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public List<User> getPaginatedUsers(int page, int size) {
-		log.info("Get paginated users");
-		// TODO
-		return null;
-	}
-
-	@Override
 	public User createUser(User user) {
 		log.info("Create user {}", user);
 		list.add(user);

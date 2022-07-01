@@ -27,11 +27,10 @@ public class PublicationController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping()
-	public List<PublicationDto> getPaginatedPublications(@RequestParam("page") @NonNull int page,
-														 @RequestParam("size") @NonNull int size) {
-		log.info("Get {} publications on {} page", size, page);
-		return publicationService.getPaginatedPublications(page, size);
+	@GetMapping
+	public List<PublicationDto> getAllPublications() {
+		log.info("Get all publications");
+		return publicationService.getAllPublications();
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)

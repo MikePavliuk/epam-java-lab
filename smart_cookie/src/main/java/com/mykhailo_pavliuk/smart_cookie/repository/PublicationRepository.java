@@ -9,8 +9,6 @@ public interface PublicationRepository {
 
 	List<Publication> getAllPublications();
 
-	List<Publication> getPaginatedPublications(int page, int size);
-
 	Publication createPublication(Publication publication);
 
 	Publication updatePublication(Long id, Publication publication);
