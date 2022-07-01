@@ -9,8 +9,6 @@ public interface UserService {
 
 	UserDto getUser(String email);
 
-	List<UserDto> getAllUsers();
-
 	List<UserDto> getPaginatedUsers(int page, int size);
 
 	UserDto createUser(UserDto user);

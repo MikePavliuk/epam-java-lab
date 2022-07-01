@@ -2,6 +2,7 @@ package com.mykhailo_pavliuk.smart_cookie.controller;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.PublicationDto;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,16 +27,9 @@ public class PublicationController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping
-	public List<PublicationDto> getAllPublications() {
-		log.info("Get all publications");
-		return publicationService.getAllPublications();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
 	@GetMapping()
-	public List<PublicationDto> getPaginatedPublications(@RequestParam("page") int page,
-												  @RequestParam("size") int size) {
+	public List<PublicationDto> getPaginatedPublications(@RequestParam("page") @NonNull int page,
+														 @RequestParam("size") @NonNull int size) {
 		log.info("Get {} publications on {} page", size, page);
 		return publicationService.getPaginatedPublications(page, size);
 	}

@@ -31,15 +31,8 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping()
-	public List<UserDto> getAllUsers() {
-		log.info("Get all users");
-		return userService.getAllUsers();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping()
 	public List<UserDto> getPaginatedUsers(@RequestParam("page") int page,
-											  @RequestParam("size") int size) {
+										   @RequestParam("size") int size) {
 		log.info("Get {} users on {} page", size, page);
 		return userService.getPaginatedUsers(page, size);
 	}

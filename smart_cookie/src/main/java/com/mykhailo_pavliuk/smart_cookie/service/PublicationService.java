@@ -7,8 +7,6 @@ import java.util.List;
 public interface PublicationService {
 	PublicationDto getPublication(Long id);
 
-	List<PublicationDto> getAllPublications();
-
 	List<PublicationDto> getPaginatedPublications(int page, int size);
 
 	PublicationDto createPublication(PublicationDto publicationDto);

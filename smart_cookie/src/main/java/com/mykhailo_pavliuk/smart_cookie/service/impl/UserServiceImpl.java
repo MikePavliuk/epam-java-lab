@@ -28,15 +28,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<UserDto> getAllUsers() {
-		log.info("Get all users");
-		return userRepository.getUsers()
-				.stream()
-				.map(UserMapper.INSTANCE::mapUserToUserDto)
-				.collect(Collectors.toList());
-	}
-
-	@Override
 	public List<UserDto> getPaginatedUsers(int page, int size) {
 		log.info("Get paginated users");
 		return userRepository.getPaginatedUsers(page, size)
