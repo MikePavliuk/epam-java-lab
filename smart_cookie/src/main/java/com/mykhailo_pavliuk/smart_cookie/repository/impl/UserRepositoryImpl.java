@@ -1,5 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.repository.impl;
 
+import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
 		return list.stream()
 				.filter(user -> user.getId() == id)
 				.findFirst()
-				.orElseThrow(() -> new RuntimeException("User is not found!"));
+				.orElseThrow(() -> new EntityNotFoundException("User is not found"));
 	}
 
 	@Override
@@ -31,6 +32,8 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public User createUser(User user) {
 		log.info("Create user {}", user);
+		user.setId((long) (list.size()+1));
+		user.setSubscriptions(new ArrayList<>());
 		list.add(user);
 		return user;
 	}
@@ -42,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
 		if (isDeleted) {
 			list.add(user);
 		} else {
-			throw new RuntimeException("User is not found!");
+			throw new EntityNotFoundException("User is not found");
 		}
 		return user;
 	}
@@ -51,5 +54,11 @@ public class UserRepositoryImpl implements UserRepository {
 	public void deleteUser(long id) {
 		log.info("Delete user with id {}", id);
 		list.removeIf(user -> user.getId() == id);
+	}
+
+	@Override
+	public boolean existsByEmail(String email) {
+		return list.stream()
+				.anyMatch(user -> user.getEmail().equals(email));
 	}
 }

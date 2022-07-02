@@ -1,5 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.model;
 
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Genre;
 import lombok.Builder;
 import lombok.Data;
 

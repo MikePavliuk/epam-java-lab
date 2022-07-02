@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -19,5 +20,12 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
 		log.info("Create subscription {}", subscription);
 		list.add(subscription);
 		return subscription;
+	}
+
+	@Override
+	public List<Subscription> getAllSubscriptionsByUserId(long userId) {
+		return list.stream()
+				.filter(subscription -> subscription.getUserId() == userId)
+				.collect(Collectors.toList());
 	}
 }

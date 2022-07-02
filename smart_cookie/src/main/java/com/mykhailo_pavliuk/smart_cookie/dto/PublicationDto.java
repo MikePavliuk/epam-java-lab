@@ -1,7 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.dto;
 
-import com.mykhailo_pavliuk.smart_cookie.model.Genre;
-import com.mykhailo_pavliuk.smart_cookie.model.PublicationInfo;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Genre;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +13,5 @@ public class PublicationDto {
 	private Long id;
 	private Genre genre;
 	private BigDecimal pricePerMonth;
-	private List<PublicationInfo> publicationInfos;
+	private List<PublicationInfoDto> publicationInfos;
 }

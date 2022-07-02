@@ -1,5 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.repository.impl;
 
+import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.model.Publication;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,7 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 		return list.stream()
 				.filter(publication -> publication.getId() == id)
 				.findFirst()
-				.orElseThrow(() -> new RuntimeException("Publication is not found!"));
+				.orElseThrow(() -> new EntityNotFoundException("Publication is not found"));
 	}
 
 	@Override
@@ -32,6 +33,7 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 	@Override
 	public Publication createPublication(Publication publication) {
 		log.info("Create publication {}", publication);
+		publication.setId((long) (list.size()+1));
 		list.add(publication);
 		return publication;
 	}
@@ -43,7 +45,7 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 		if (isDeleted) {
 			list.add(publication);
 		} else {
-			throw new RuntimeException("User is not found!");
+			throw new EntityNotFoundException("Publication is not found");
 		}
 		return publication;
 	}

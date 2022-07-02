@@ -1,5 +1,7 @@
 package com.mykhailo_pavliuk.smart_cookie.model;
 
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Role;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -10,7 +12,7 @@ import java.util.List;
 @Builder
 public class User {
 
-	private Integer id;
+	private Long id;
 
 	private String email;
 

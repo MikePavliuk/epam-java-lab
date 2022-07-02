@@ -43,7 +43,8 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping("/{id}")
-	public UserDto updateUser(@PathVariable long id, @RequestBody UserDto userDto) {
+	public UserDto updateUser(@PathVariable long id,
+							  @RequestBody UserDto userDto) {
 		log.info("Update user by id {}", id);
 		log.trace("Request body userDto {}", userDto);
 		return userService.updateUser(id, userDto);
@@ -68,7 +69,8 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping("/{id}/add-funds")
-	public UserDto addFundsToUser(@PathVariable long id, @RequestParam BigDecimal amount) {
+	public UserDto addFundsToUser(@PathVariable long id,
+								  @RequestParam BigDecimal amount) {
 		log.info("Add funds to user with id {} in amount of {}", id, amount);
 		return userService.addFunds(id, amount);
 	}

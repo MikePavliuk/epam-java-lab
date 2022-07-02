@@ -41,7 +41,8 @@ public class PublicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/{id}")
-	public PublicationDto updatePublication(@PathVariable long id, @RequestBody PublicationDto publicationDto) {
+	public PublicationDto updatePublication(@PathVariable long id,
+											@RequestBody PublicationDto publicationDto) {
 		log.info("Update publication by id {}", id);
 		log.trace("Request body publicationDto {}", publicationDto);
 		return publicationService.updatePublication(id, publicationDto);
@@ -53,6 +54,13 @@ public class PublicationController {
 		log.info("Delete publication by id {}", id);
 		publicationService.deletePublication(id);
 		return ResponseEntity.noContent().build();
+	}
+
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping("/user/{userId}")
+	public List<PublicationDto> getAllPublicationsByUserId(@PathVariable long userId) {
+		log.info("Get all publications of user with id {}", userId);
+		return publicationService.getPublicationsByUserId(userId);
 	}
 
 }

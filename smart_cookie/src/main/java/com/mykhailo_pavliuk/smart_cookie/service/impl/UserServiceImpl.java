@@ -1,9 +1,10 @@
 package com.mykhailo_pavliuk.smart_cookie.service.impl;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
+import com.mykhailo_pavliuk.smart_cookie.mapper.UserDetailMapper;
 import com.mykhailo_pavliuk.smart_cookie.mapper.UserMapper;
-import com.mykhailo_pavliuk.smart_cookie.model.Role;
-import com.mykhailo_pavliuk.smart_cookie.model.Status;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Role;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
@@ -43,6 +44,8 @@ public class UserServiceImpl implements UserService {
 		userDto.setRole(Role.SUBSCRIBER);
 		userDto.setStatus(Status.ACTIVE);
 		User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
+		user.setUserDetail(UserDetailMapper.INSTANCE.mapUserDetailDtoToUserDetail(userDto.getUserDetail()));
+		user.getUserDetail().setBalance(BigDecimal.ZERO);
 		user = userRepository.createUser(user);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
 	}
@@ -51,6 +54,7 @@ public class UserServiceImpl implements UserService {
 	public UserDto updateUser(long id, UserDto userDto) {
 		log.info("Update user with id {}", id);
 		User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
+		user.setUserDetail(UserDetailMapper.INSTANCE.mapUserDetailDtoToUserDetail(userDto.getUserDetail()));
 		user = userRepository.updateUser(id, user);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
 	}
