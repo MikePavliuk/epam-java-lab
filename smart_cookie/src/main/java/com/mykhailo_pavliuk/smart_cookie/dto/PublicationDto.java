@@ -2,7 +2,7 @@ package com.mykhailo_pavliuk.smart_cookie.dto;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.group.OnCreate;
 import com.mykhailo_pavliuk.smart_cookie.dto.group.OnUpdate;
-import com.mykhailo_pavliuk.smart_cookie.model.Genre;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Genre;
 import lombok.Builder;
 import lombok.Data;
 

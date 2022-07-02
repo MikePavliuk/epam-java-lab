@@ -1,6 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.repository;
 
-import com.mykhailo_pavliuk.smart_cookie.model.Status;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 
 import java.util.List;

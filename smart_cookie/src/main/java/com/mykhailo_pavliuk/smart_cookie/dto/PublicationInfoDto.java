@@ -1,6 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.dto;
 
-import com.mykhailo_pavliuk.smart_cookie.model.Language;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Language;
 import lombok.Builder;
 import lombok.Data;
 

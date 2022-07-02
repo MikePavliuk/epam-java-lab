@@ -1,6 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.util;
 
-import com.mykhailo_pavliuk.smart_cookie.model.Status;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.actuate.info.Info;

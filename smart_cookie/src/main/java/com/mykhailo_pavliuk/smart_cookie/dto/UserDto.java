@@ -2,8 +2,8 @@ package com.mykhailo_pavliuk.smart_cookie.dto;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.group.OnCreate;
 import com.mykhailo_pavliuk.smart_cookie.dto.group.OnUpdate;
-import com.mykhailo_pavliuk.smart_cookie.model.Role;
-import com.mykhailo_pavliuk.smart_cookie.model.Status;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Role;
+import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
 import com.mykhailo_pavliuk.smart_cookie.util.validation.unique.Unique;
 import lombok.Builder;
