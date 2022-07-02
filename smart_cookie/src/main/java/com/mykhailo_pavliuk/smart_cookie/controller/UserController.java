@@ -1,15 +1,18 @@
 package com.mykhailo_pavliuk.smart_cookie.controller;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
+import com.mykhailo_pavliuk.smart_cookie.dto.group.OnCreate;
+import com.mykhailo_pavliuk.smart_cookie.dto.group.OnUpdate;
 import com.mykhailo_pavliuk.smart_cookie.service.SubscriptionService;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -38,13 +41,13 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping()
-	public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+	public UserDto createUser(@Validated(OnCreate.class) @RequestBody UserDto userDto) {
 		return userService.createUser(userDto);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping("/{id}")
-	public UserDto updateUser(@PathVariable long id, @Valid @RequestBody UserDto userDto) {
+	public UserDto updateUser(@PathVariable long id, @Validated(OnUpdate.class) @RequestBody UserDto userDto) {
 		log.info("Update user by id {}", id);
 		log.trace("Request body userDto {}", userDto);
 		return userService.updateUser(id, userDto);
@@ -62,14 +65,14 @@ public class UserController {
 	@PutMapping("/{userId}/publications/{publicationId}")
 	public UserDto addSubscriptionToUser(@PathVariable long userId,
 										 @PathVariable long publicationId,
-										 @RequestParam int periodInMonths) {
+										 @RequestParam @Positive int periodInMonths) {
 		log.info("Subscribe user with id {} to publication with id {} for {} (period in months)", userId, publicationId, periodInMonths);
 		return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping("/{id}/add-funds")
-	public UserDto addFundsToUser(@PathVariable long id, @RequestParam BigDecimal amount) {
+	public UserDto addFundsToUser(@PathVariable long id, @Positive @RequestParam BigDecimal amount) {
 		log.info("Add funds to user with id {} in amount of {}", id, amount);
 		return userService.addFunds(id, amount);
 	}

@@ -45,6 +45,7 @@ public class UserServiceImpl implements UserService {
 		userDto.setStatus(Status.ACTIVE);
 		User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
 		user.setUserDetail(UserDetailMapper.INSTANCE.mapUserDetailDtoToUserDetail(userDto.getUserDetail()));
+		user.getUserDetail().setBalance(BigDecimal.ZERO);
 		user = userRepository.createUser(user);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
 	}

@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 public class PublicationInfoDto {
 
-	@NotNull
+	@NotNull(message = "{validation.language.not_null}")
 	private Language language;
 
 	@Pattern(regexp = ".{2,100}",

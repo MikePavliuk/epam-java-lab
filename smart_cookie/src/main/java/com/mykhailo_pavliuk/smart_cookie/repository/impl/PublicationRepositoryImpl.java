@@ -32,6 +32,7 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 	@Override
 	public Publication createPublication(Publication publication) {
 		log.info("Create publication {}", publication);
+		publication.setId((long) (list.size()+1));
 		list.add(publication);
 		return publication;
 	}

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -50,11 +49,5 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		Subscription newSubscription = subscriptionRepository.createSubscription(subscription);
 		user.getSubscriptions().add(newSubscription);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
-	}
-
-	@Override
-	public List<Subscription> getAllSubscriptionsByUserId(long userId) {
-		log.info("Get all subscriptions by user id {}", userId);
-		return subscriptionRepository.getAllSubscriptionsByUserId(userId);
 	}
 }

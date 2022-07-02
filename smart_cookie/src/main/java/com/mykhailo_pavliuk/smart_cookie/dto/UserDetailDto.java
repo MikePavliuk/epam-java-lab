@@ -1,7 +1,9 @@
 package com.mykhailo_pavliuk.smart_cookie.dto;
 
+import com.mykhailo_pavliuk.smart_cookie.dto.group.OnCreate;
 import lombok.Data;
 
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 
@@ -16,6 +18,7 @@ public class UserDetailDto {
 			message = "{validation.user.last_name}")
 	private String lastName;
 
+	@Null(message = "{validation.balance.null}", groups = OnCreate.class)
 	private BigDecimal balance;
 
 }
