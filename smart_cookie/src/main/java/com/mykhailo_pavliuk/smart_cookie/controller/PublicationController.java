@@ -37,14 +37,15 @@ public class PublicationController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public PublicationDto createPublication(@Validated(OnCreate.class) @RequestBody PublicationDto publicationDto) {
+	public PublicationDto createPublication(@RequestBody @Validated(OnCreate.class) PublicationDto publicationDto) {
 		log.info("Create publication {}", publicationDto);
 		return publicationService.createPublication(publicationDto);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/{id}")
-	public PublicationDto updatePublication(@PathVariable long id, @Validated(OnUpdate.class) @RequestBody PublicationDto publicationDto) {
+	public PublicationDto updatePublication(@PathVariable long id,
+											@RequestBody @Validated(OnUpdate.class) PublicationDto publicationDto) {
 		log.info("Update publication by id {}", id);
 		log.trace("Request body publicationDto {}", publicationDto);
 		return publicationService.updatePublication(id, publicationDto);
