@@ -2,6 +2,8 @@ package com.mykhailo_pavliuk.smart_cookie.service.impl;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
 import com.mykhailo_pavliuk.smart_cookie.mapper.UserMapper;
+import com.mykhailo_pavliuk.smart_cookie.model.Role;
+import com.mykhailo_pavliuk.smart_cookie.model.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
@@ -21,9 +23,9 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
 	@Override
-	public UserDto getUser(String email) {
-		log.info("Get user by email {}", email);
-		User user = userRepository.getUser(email);
+	public UserDto getUser(long id) {
+		log.info("Get user by id {}", id);
+		User user = userRepository.getUser(id);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
 	}
 
@@ -38,31 +40,33 @@ public class UserServiceImpl implements UserService {
 
 	public UserDto createUser(UserDto userDto) {
 		log.info("Create user with email {}", userDto.getEmail());
+		userDto.setRole(Role.SUBSCRIBER);
+		userDto.setStatus(Status.ACTIVE);
 		User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
 		user = userRepository.createUser(user);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
 	}
 
 	@Override
-	public UserDto updateUser(String email, UserDto userDto) {
-		log.info("Update user with email {}", email);
+	public UserDto updateUser(long id, UserDto userDto) {
+		log.info("Update user with id {}", id);
 		User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
-		user = userRepository.updateUser(email, user);
+		user = userRepository.updateUser(id, user);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);
 	}
 
 	@Override
-	public void deleteUser(String email) {
-		log.info("Delete user with email {}", email);
-		userRepository.deleteUser(email);
+	public void deleteUser(long id) {
+		log.info("Delete user with id {}", id);
+		userRepository.deleteUser(id);
 	}
 
 	@Override
-	public UserDto addFunds(String userEmail, BigDecimal amount) {
+	public UserDto addFunds(long id, BigDecimal amount) {
 		log.info("Add funds");
-		User user = userRepository.getUser(userEmail);
+		User user = userRepository.getUser(id);
 		user.getUserDetail().setBalance(user.getUserDetail().getBalance().add(amount));
-		User updatedUser = userRepository.updateUser(userEmail, user);
+		User updatedUser = userRepository.updateUser(id, user);
 		return UserMapper.INSTANCE.mapUserToUserDto(updatedUser);
 	}
 

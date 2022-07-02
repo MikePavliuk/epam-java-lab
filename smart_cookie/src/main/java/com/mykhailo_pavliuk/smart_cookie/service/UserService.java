@@ -7,16 +7,16 @@ import java.util.List;
 
 public interface UserService {
 
-	UserDto getUser(String email);
+	UserDto getUser(long id);
 
 	List<UserDto> getAllUsers();
 
 	UserDto createUser(UserDto user);
 
-	UserDto updateUser(String email, UserDto user);
+	UserDto updateUser(long id, UserDto user);
 
-	void deleteUser(String email);
+	void deleteUser(long id);
 
-	UserDto addFunds(String userEmail, BigDecimal amount);
+	UserDto addFunds(long id, BigDecimal amount);
 
 }

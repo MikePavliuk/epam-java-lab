@@ -14,10 +14,10 @@ public class UserRepositoryImpl implements UserRepository {
 	private final List<User> list = new ArrayList<>();
 
 	@Override
-	public User getUser(String email) {
-		log.info("Get user with email {}", email);
+	public User getUser(long id) {
+		log.info("Get user with id {}", id);
 		return list.stream()
-				.filter(user -> user.getEmail().equals(email))
+				.filter(user -> user.getId() == id)
 				.findFirst()
 				.orElseThrow(() -> new RuntimeException("User is not found!"));
 	}
@@ -36,9 +36,9 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public User updateUser(String email, User user) {
-		log.info("Update user with email {}", email);
-		boolean isDeleted = list.removeIf(u -> u.getEmail().equals(email));
+	public User updateUser(long id, User user) {
+		log.info("Update user with id {}", id);
+		boolean isDeleted = list.removeIf(u -> u.getId() == id);
 		if (isDeleted) {
 			list.add(user);
 		} else {
@@ -48,8 +48,8 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public void deleteUser(String email) {
-		log.info("Delete user with email {}", email);
-		list.removeIf(user -> user.getEmail().equals(email));
+	public void deleteUser(long id) {
+		log.info("Delete user with id {}", id);
+		list.removeIf(user -> user.getId() == id);
 	}
 }

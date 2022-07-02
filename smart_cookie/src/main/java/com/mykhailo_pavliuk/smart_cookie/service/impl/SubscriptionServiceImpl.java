@@ -24,9 +24,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	private final PublicationRepository publicationRepository;
 
 	@Override
-	public UserDto addSubscriptionToUser(String userEmail, Subscription subscription) {
-		log.info("Subscribe user with email {} to publication with id {}", userEmail, subscription.getPublicationId());
-		User user = userRepository.getUser(userEmail);
+	public UserDto addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
+		log.info("Add subscription to user");
+
+		Subscription subscription = Subscription.builder()
+				.userId(userId)
+				.publicationId(publicationId)
+				.periodInMonths(periodInMonths)
+				.build();
+
+		User user = userRepository.getUser(subscription.getUserId());
 		BigDecimal fullPrice = publicationRepository.getPublication(subscription.getPublicationId())
 				.getPricePerMonth()
 				.multiply(BigDecimal.valueOf(subscription.getPeriodInMonths()));
@@ -36,7 +43,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 
 		user.getUserDetail().setBalance(user.getUserDetail().getBalance().subtract(fullPrice));
-		userRepository.updateUser(userEmail, user);
+		userRepository.updateUser(userId, user);
 		Subscription newSubscription = subscriptionRepository.createSubscription(subscription);
 		user.getSubscriptions().add(newSubscription);
 		return UserMapper.INSTANCE.mapUserToUserDto(user);

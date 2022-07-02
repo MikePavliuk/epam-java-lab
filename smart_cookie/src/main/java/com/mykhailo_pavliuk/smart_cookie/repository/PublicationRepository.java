@@ -5,13 +5,13 @@ import com.mykhailo_pavliuk.smart_cookie.model.Publication;
 import java.util.List;
 
 public interface PublicationRepository {
-	Publication getPublication(Long id);
+	Publication getPublication(long id);
 
 	List<Publication> getAllPublications();
 
 	Publication createPublication(Publication publication);
 
-	Publication updatePublication(Long id, Publication publication);
+	Publication updatePublication(long id, Publication publication);
 
-	void deletePublication(Long id);
+	void deletePublication(long id);
 }

@@ -20,7 +20,7 @@ public class PublicationServiceImpl implements PublicationService {
 	private final PublicationRepository publicationRepository;
 
 	@Override
-	public PublicationDto getPublication(Long id) {
+	public PublicationDto getPublication(long id) {
 		log.info("Get publication by id {}", id);
 		Publication publication = publicationRepository.getPublication(id);
 		return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
@@ -44,7 +44,7 @@ public class PublicationServiceImpl implements PublicationService {
 	}
 
 	@Override
-	public PublicationDto updatePublication(Long id, PublicationDto publicationDto) {
+	public PublicationDto updatePublication(long id, PublicationDto publicationDto) {
 		log.info("Update publication with id {}", id);
 		Publication publication = PublicationMapper.INSTANCE.mapPublicationDtoToPublication(publicationDto);
 		publication = publicationRepository.updatePublication(id, publication);
@@ -52,7 +52,7 @@ public class PublicationServiceImpl implements PublicationService {
 	}
 
 	@Override
-	public void deletePublication(Long id) {
+	public void deletePublication(long id) {
 		log.info("Delete publication with id {}", id);
 		publicationRepository.deletePublication(id);
 	}

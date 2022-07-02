@@ -15,10 +15,10 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 	private final List<Publication> list = new ArrayList<>();
 
 	@Override
-	public Publication getPublication(Long id) {
+	public Publication getPublication(long id) {
 		log.info("Get publication with id {}", id);
 		return list.stream()
-				.filter(publication -> publication.getId().equals(id))
+				.filter(publication -> publication.getId() == id)
 				.findFirst()
 				.orElseThrow(() -> new RuntimeException("Publication is not found!"));
 	}
@@ -37,7 +37,7 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 	}
 
 	@Override
-	public Publication updatePublication(Long id, Publication publication) {
+	public Publication updatePublication(long id, Publication publication) {
 		log.info("Update publication with id {}", id);
 		boolean isDeleted = list.removeIf(p -> p.getId().equals(id));
 		if (isDeleted) {
@@ -49,7 +49,7 @@ public class PublicationRepositoryImpl implements PublicationRepository {
 	}
 
 	@Override
-	public void deletePublication(Long id) {
+	public void deletePublication(long id) {
 		log.info("Delete publication with id {}", id);
 		list.removeIf(publication -> publication.getId().equals(id));
 	}

@@ -5,13 +5,13 @@ import com.mykhailo_pavliuk.smart_cookie.model.User;
 import java.util.List;
 
 public interface UserRepository {
-	User getUser(String email);
+	User getUser(long id);
 
 	List<User> getUsers();
 
 	User createUser(User user);
 
-	User updateUser(String email, User user);
+	User updateUser(long id, User user);
 
-	void deleteUser(String email);
+	void deleteUser(long id);
 }

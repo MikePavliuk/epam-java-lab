@@ -2,7 +2,6 @@ package com.mykhailo_pavliuk.smart_cookie.controller;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.PublicationDto;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,7 @@ public class PublicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping("/{id}")
-	public PublicationDto getPublication(@PathVariable Long id) {
+	public PublicationDto getPublication(@PathVariable long id) {
 		log.info("Get publication by id {}", id);
 		return publicationService.getPublication(id);
 	}
@@ -42,7 +41,7 @@ public class PublicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@PutMapping(value = "/{id}")
-	public PublicationDto updatePublication(@PathVariable Long id, @RequestBody PublicationDto publicationDto) {
+	public PublicationDto updatePublication(@PathVariable long id, @RequestBody PublicationDto publicationDto) {
 		log.info("Update publication by id {}", id);
 		log.trace("Request body publicationDto {}", publicationDto);
 		return publicationService.updatePublication(id, publicationDto);
@@ -50,7 +49,7 @@ public class PublicationController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
+	public ResponseEntity<Void> deletePublication(@PathVariable long id) {
 		log.info("Delete publication by id {}", id);
 		publicationService.deletePublication(id);
 		return ResponseEntity.noContent().build();

@@ -23,10 +23,10 @@ public class UserController {
 	private final SubscriptionService subscriptionService;
 
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping("/{email}")
-	public UserDto getUser(@PathVariable String email) {
-		log.info("Get user by email {}", email);
-		return userService.getUser(email);
+	@GetMapping("/{id}")
+	public UserDto getUser(@PathVariable long id) {
+		log.info("Get user by id {}", id);
+		return userService.getUser(id);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
@@ -43,33 +43,35 @@ public class UserController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping(value = "/{email}")
-	public UserDto updateUser(@PathVariable String email, @RequestBody UserDto userDto) {
-		log.info("Update user by email {}", email);
-		log.trace("Request body userDt0 {}", userDto);
-		return userService.updateUser(email, userDto);
+	@PatchMapping("/{id}")
+	public UserDto updateUser(@PathVariable long id, @RequestBody UserDto userDto) {
+		log.info("Update user by id {}", id);
+		log.trace("Request body userDto {}", userDto);
+		return userService.updateUser(id, userDto);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping("/{email}")
-	public ResponseEntity<Void> deleteUser(@PathVariable String email) {
-		log.info("Delete user by email {}", email);
-		userService.deleteUser(email);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteUser(@PathVariable long id) {
+		log.info("Delete user by id {}", id);
+		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/{email}/subscribe")
-	public UserDto addSubscriptionToUser(@PathVariable String email, @RequestBody Subscription subscription) {
-		log.info("Subscribe user with email {} to publication with id {}", email, subscription.getPublicationId());
-		return subscriptionService.addSubscriptionToUser(email, subscription);
+	@PostMapping("/{userId}/publications/{publicationId}")
+	public UserDto addSubscriptionToUser(@PathVariable long userId,
+										 @PathVariable long publicationId,
+										 @RequestParam int periodInMonths) {
+		log.info("Subscribe user with id {} to publication with id {} for {} (period in months)", userId, publicationId, periodInMonths);
+		return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping("/{email}/add-funds")
-	public UserDto addFundsToUser(@PathVariable String email, @RequestParam BigDecimal amount) {
-		log.info("Add funds to user with email {} in amount of {}", email, amount);
-		return userService.addFunds(email, amount);
+	@PatchMapping("/{id}/add-funds")
+	public UserDto addFundsToUser(@PathVariable long id, @RequestParam BigDecimal amount) {
+		log.info("Add funds to user with id {} in amount of {}", id, amount);
+		return userService.addFunds(id, amount);
 	}
 
 }
