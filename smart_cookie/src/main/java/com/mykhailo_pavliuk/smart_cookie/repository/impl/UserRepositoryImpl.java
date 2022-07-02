@@ -1,5 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.repository.impl;
 
+import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
@@ -20,7 +21,7 @@ public class UserRepositoryImpl implements UserRepository {
 		return list.stream()
 				.filter(user -> user.getId() == id)
 				.findFirst()
-				.orElseThrow(() -> new RuntimeException("User is not found!"));
+				.orElseThrow(() -> new EntityNotFoundException("User is not found"));
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
 		if (isDeleted) {
 			list.add(user);
 		} else {
-			throw new RuntimeException("User is not found!");
+			throw new EntityNotFoundException("User is not found");
 		}
 		return user;
 	}
