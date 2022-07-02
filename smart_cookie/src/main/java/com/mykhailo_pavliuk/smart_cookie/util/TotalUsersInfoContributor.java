@@ -1,4 +1,4 @@
-package com.mykhailo_pavliuk.smart_cookie.config;
+package com.mykhailo_pavliuk.smart_cookie.util;
 
 import com.mykhailo_pavliuk.smart_cookie.model.Status;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
