@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -37,13 +38,13 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping()
-	public UserDto createUser(@RequestBody UserDto userDto) {
+	public UserDto createUser(@Valid @RequestBody UserDto userDto) {
 		return userService.createUser(userDto);
 	}
 
 	@ResponseStatus(HttpStatus.OK)
 	@PatchMapping("/{id}")
-	public UserDto updateUser(@PathVariable long id, @RequestBody UserDto userDto) {
+	public UserDto updateUser(@PathVariable long id, @Valid @RequestBody UserDto userDto) {
 		log.info("Update user by id {}", id);
 		log.trace("Request body userDto {}", userDto);
 		return userService.updateUser(id, userDto);

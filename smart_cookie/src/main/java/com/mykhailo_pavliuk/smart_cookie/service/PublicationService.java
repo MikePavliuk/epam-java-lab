@@ -14,4 +14,6 @@ public interface PublicationService {
 	PublicationDto updatePublication(long id, PublicationDto publicationDto);
 
 	void deletePublication(long id);
+
+	List<PublicationDto> getPublicationsByUserId(long userId);
 }

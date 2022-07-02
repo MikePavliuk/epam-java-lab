@@ -55,4 +55,11 @@ public class PublicationController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ResponseStatus(HttpStatus.OK)
+	@GetMapping("/user/{userId}")
+	public List<PublicationDto> getAllPublicationsByUserId(@PathVariable long userId) {
+		log.info("Get all publications of user with id {}", userId);
+		return publicationService.getPublicationsByUserId(userId);
+	}
+
 }
