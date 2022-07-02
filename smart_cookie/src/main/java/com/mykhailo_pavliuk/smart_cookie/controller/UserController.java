@@ -1,7 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.controller;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
-import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
 import com.mykhailo_pavliuk.smart_cookie.service.SubscriptionService;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +58,7 @@ public class UserController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@PostMapping("/{userId}/publications/{publicationId}")
+	@PutMapping("/{userId}/publications/{publicationId}")
 	public UserDto addSubscriptionToUser(@PathVariable long userId,
 										 @PathVariable long publicationId,
 										 @RequestParam int periodInMonths) {
