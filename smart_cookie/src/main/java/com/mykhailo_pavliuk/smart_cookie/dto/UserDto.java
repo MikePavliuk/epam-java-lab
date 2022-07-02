@@ -3,6 +3,7 @@ package com.mykhailo_pavliuk.smart_cookie.dto;
 import com.mykhailo_pavliuk.smart_cookie.model.Role;
 import com.mykhailo_pavliuk.smart_cookie.model.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
+import com.mykhailo_pavliuk.smart_cookie.util.validation.unique.Unique;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -19,6 +20,7 @@ public class UserDto {
 
 	@Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$",
 			message = "{validation.user.email}")
+	@Unique(message = "{validation.user.emailAlreadyExists}")
 	private String email;
 
 	@ToString.Exclude

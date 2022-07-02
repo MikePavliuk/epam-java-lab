@@ -73,4 +73,9 @@ public class UserServiceImpl implements UserService {
 		return UserMapper.INSTANCE.mapUserToUserDto(updatedUser);
 	}
 
+	@Override
+	public boolean existsByEmail(String email) {
+		return userRepository.existsByEmail(email);
+	}
+
 }

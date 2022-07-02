@@ -66,4 +66,10 @@ public class UserRepositoryImpl implements UserRepository {
 
 		return count;
 	}
+
+	@Override
+	public boolean existsByEmail(String email) {
+		return list.stream()
+				.anyMatch(user -> user.getEmail().equals(email));
+	}
 }

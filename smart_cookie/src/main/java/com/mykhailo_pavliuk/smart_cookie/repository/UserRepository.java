@@ -17,4 +17,6 @@ public interface UserRepository {
 	void deleteUser(long id);
 
 	long countByStatus(Status status);
+
+	boolean existsByEmail(String email);
 }

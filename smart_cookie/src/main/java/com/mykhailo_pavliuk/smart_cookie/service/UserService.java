@@ -19,4 +19,6 @@ public interface UserService {
 
 	UserDto addFunds(long id, BigDecimal amount);
 
+	boolean existsByEmail(String email);
+
 }
