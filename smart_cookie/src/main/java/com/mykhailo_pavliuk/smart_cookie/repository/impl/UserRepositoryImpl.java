@@ -1,5 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.repository.impl;
 
+import com.mykhailo_pavliuk.smart_cookie.model.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -51,5 +52,18 @@ public class UserRepositoryImpl implements UserRepository {
 	public void deleteUser(long id) {
 		log.info("Delete user with id {}", id);
 		list.removeIf(user -> user.getId() == id);
+	}
+
+	@Override
+	public long countByStatus(Status status) {
+		long count = 0;
+
+		for (User user : list) {
+			if (user.getStatus().equals(status)) {
+				count++;
+			}
+		}
+
+		return count;
 	}
 }

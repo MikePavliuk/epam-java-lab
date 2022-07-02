@@ -1,5 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.repository;
 
+import com.mykhailo_pavliuk.smart_cookie.model.Status;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface UserRepository {
 	User updateUser(long id, User user);
 
 	void deleteUser(long id);
+
+	long countByStatus(Status status);
 }
