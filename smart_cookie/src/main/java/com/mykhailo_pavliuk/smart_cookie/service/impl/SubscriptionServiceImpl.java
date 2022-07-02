@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Slf4j
 @Service
@@ -31,6 +32,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 				.userId(userId)
 				.publicationId(publicationId)
 				.periodInMonths(periodInMonths)
+				.startDate(LocalDate.now())
 				.build();
 
 		User user = userRepository.getUser(subscription.getUserId());
