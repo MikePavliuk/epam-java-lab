@@ -1,80 +1,64 @@
 package com.mykhailo_pavliuk.smart_cookie.controller;
 
+import com.mykhailo_pavliuk.smart_cookie.api.UserApi;
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
-import com.mykhailo_pavliuk.smart_cookie.dto.group.OnCreate;
-import com.mykhailo_pavliuk.smart_cookie.dto.group.OnUpdate;
 import com.mykhailo_pavliuk.smart_cookie.service.SubscriptionService;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
 
-@RestController
 @Slf4j
-@RequestMapping("/users")
+@RestController
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserApi {
 
 	private final UserService userService;
 	private final SubscriptionService subscriptionService;
 
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping("/{id}")
-	public UserDto getUser(@PathVariable long id) {
+	@Override
+	public UserDto getUser(long id) {
 		log.info("Get user by id {}", id);
 		return userService.getUser(id);
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping()
+	@Override
 	public List<UserDto> getAllUsers() {
 		log.info("Get all users");
 		return userService.getAllUsers();
 	}
 
-	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping()
-	public UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto userDto) {
+	@Override
+	public UserDto createUser(UserDto userDto) {
 		return userService.createUser(userDto);
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping("/{id}")
-	public UserDto updateUser(@PathVariable long id,
-							  @RequestBody @Validated(OnUpdate.class) UserDto userDto) {
+	@Override
+	public UserDto updateUser(long id, UserDto userDto) {
 		log.info("Update user by id {}", id);
 		log.trace("Request body userDto {}", userDto);
 		return userService.updateUser(id, userDto);
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable long id) {
+	@Override
+	public ResponseEntity<Void> deleteUser(long id) {
 		log.info("Delete user by id {}", id);
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	@PutMapping("/{userId}/publications/{publicationId}")
-	public UserDto addSubscriptionToUser(@PathVariable long userId,
-										 @PathVariable long publicationId,
-										 @RequestParam @Positive int periodInMonths) {
+	@Override
+	public UserDto addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
 		log.info("Subscribe user with id {} to publication with id {} for {} (period in months)", userId, publicationId, periodInMonths);
 		return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	@PatchMapping("/{id}/add-funds")
-	public UserDto addFundsToUser(@PathVariable long id,
-								  @RequestParam @Positive BigDecimal amount) {
+	@Override
+	public UserDto addFundsToUser(long id, BigDecimal amount) {
 		log.info("Add funds to user with id {} in amount of {}", id, amount);
 		return userService.addFunds(id, amount);
 	}
