@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomBeanPostProcessor implements BeanPostProcessor {
 
-	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+  @Override
+  public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
-		if (bean instanceof Validatable) {
-			((Validatable) bean).validate();
-		}
+    if (bean instanceof Validatable) {
+      ((Validatable) bean).validate();
+    }
 
-		return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
-	}
+    return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
+  }
 }

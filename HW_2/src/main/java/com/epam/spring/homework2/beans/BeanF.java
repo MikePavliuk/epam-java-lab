@@ -5,5 +5,4 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Lazy
-public class BeanF extends AbstractBean {
-}
+public class BeanF extends AbstractBean {}
