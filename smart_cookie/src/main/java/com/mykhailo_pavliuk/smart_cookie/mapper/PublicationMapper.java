@@ -7,8 +7,9 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface PublicationMapper {
-	PublicationMapper INSTANCE = Mappers.getMapper(PublicationMapper.class);
+  PublicationMapper INSTANCE = Mappers.getMapper(PublicationMapper.class);
 
-	PublicationDto mapPublicationToPublicationDto(Publication publication);
-	Publication mapPublicationDtoToPublication(PublicationDto publicationDto);
+  PublicationDto mapPublicationToPublicationDto(Publication publication);
+
+  Publication mapPublicationDtoToPublication(PublicationDto publicationDto);
 }

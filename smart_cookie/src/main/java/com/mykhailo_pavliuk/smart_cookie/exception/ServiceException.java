@@ -8,13 +8,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public abstract class ServiceException extends RuntimeException {
 
-	private ErrorType errorType;
+  protected ServiceException(String message) {
+    super(message);
+  }
 
-	public ServiceException(String message) {
-		super(message);
-	}
-
-	public ErrorType getErrorType() {
-		return ErrorType.FATAL_ERROR_TYPE;
-	}
+  public ErrorType getErrorType() {
+    return ErrorType.FATAL_ERROR_TYPE;
+  }
 }
