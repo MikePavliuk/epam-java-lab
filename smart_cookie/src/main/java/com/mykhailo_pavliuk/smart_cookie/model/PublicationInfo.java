@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class PublicationInfo {
-	private Language language;
-	private String title;
-	private String description;
+  private Language language;
+  private String title;
+  private String description;
 }

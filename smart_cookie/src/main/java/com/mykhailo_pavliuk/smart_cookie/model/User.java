@@ -2,28 +2,26 @@ package com.mykhailo_pavliuk.smart_cookie.model;
 
 import com.mykhailo_pavliuk.smart_cookie.model.enums.Role;
 import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
-
-import java.util.List;
 
 @Data
 @Builder
 public class User {
 
-	private Long id;
+  private Long id;
 
-	private String email;
+  private String email;
 
-	@ToString.Exclude
-	private String password;
+  @ToString.Exclude private String password;
 
-	private UserDetail userDetail;
+  private UserDetail userDetail;
 
-	private Status status;
+  private Status status;
 
-	private Role role;
+  private Role role;
 
-	private List<Subscription> subscriptions;
+  private List<Subscription> subscriptions;
 }

@@ -1,13 +1,11 @@
 package com.mykhailo_pavliuk.smart_cookie.dto;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
+import lombok.Data;
 
 @Data
 public class UserDetailDto {
-	private String firstName;
-	private String lastName;
-	private BigDecimal balance;
-
+  private String firstName;
+  private String lastName;
+  private BigDecimal balance;
 }
