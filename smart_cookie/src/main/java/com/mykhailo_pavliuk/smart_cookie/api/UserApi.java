@@ -8,8 +8,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
-import java.util.List;
 import javax.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,10 +37,15 @@ public interface UserApi {
   @GetMapping("/{id}")
   UserDto getUser(@PathVariable long id);
 
-  @ApiOperation("Get all users")
+  @ApiImplicitParams({
+      @ApiImplicitParam(name = "page", paramType = "path", value = "Page number starting from 0"),
+      @ApiImplicitParam(name = "size", paramType = "path", value = "Number of items to be displayed"),
+      @ApiImplicitParam(name = "sort", paramType = "path", value = "Sorting params, for example: 'id,desc' (no space after comma!)"),
+  })
+  @ApiOperation("Get all users (also with ability to be pageable and sortable)")
   @ResponseStatus(HttpStatus.OK)
   @GetMapping()
-  List<UserDto> getAllUsers();
+  Page<UserDto> getAllUsers(Pageable pageable);
 
   @ApiOperation("Create user")
   @ResponseStatus(HttpStatus.CREATED)

@@ -2,13 +2,14 @@ package com.mykhailo_pavliuk.smart_cookie.service;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
 import java.math.BigDecimal;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
   UserDto getUser(long id);
 
-  List<UserDto> getAllUsers();
+  Page<UserDto> getAllUsers(Pageable pageable);
 
   UserDto createUser(UserDto user);
 

@@ -14,11 +14,11 @@ import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserStatusRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -38,11 +38,15 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserDto> getAllUsers() {
+  public Page<UserDto> getAllUsers(Pageable pageable) {
     log.info("Get all users");
-    return userRepository.findAll().stream()
-        .map(UserMapper.INSTANCE::mapUserToUserDto)
-        .collect(Collectors.toList());
+
+    Page<UserDto> userDtos = userRepository.findAll(pageable)
+        .map(UserMapper.INSTANCE::mapUserToUserDto);
+
+    log.info("userDtos {}", userDtos);
+
+    return userDtos;
   }
 
   public UserDto createUser(UserDto userDto) {

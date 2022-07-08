@@ -5,9 +5,10 @@ import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
 import com.mykhailo_pavliuk.smart_cookie.service.SubscriptionService;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import java.math.BigDecimal;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,9 +27,9 @@ public class UserController implements UserApi {
   }
 
   @Override
-  public List<UserDto> getAllUsers() {
+  public Page<UserDto> getAllUsers(Pageable pageable) {
     log.info("Get all users");
-    return userService.getAllUsers();
+    return userService.getAllUsers(pageable);
   }
 
   @Override
