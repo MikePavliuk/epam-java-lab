@@ -21,32 +21,32 @@ public class PublicationController implements PublicationApi {
   @Override
   public PublicationDto getPublication(long id) {
     log.info("Get publication by id {}", id);
-    return publicationService.getPublication(id);
+    return publicationService.getById(id);
   }
 
   @Override
   public Page<PublicationDto> getAllPublications(Pageable pageable) {
     log.info("Get all publications");
-    return publicationService.getAllPublications(pageable);
+    return publicationService.getAll(pageable);
   }
 
   @Override
   public PublicationDto createPublication(PublicationDto publicationDto) {
     log.info("Create publication {}", publicationDto);
-    return publicationService.createPublication(publicationDto);
+    return publicationService.create(publicationDto);
   }
 
   @Override
   public PublicationDto updatePublication(long id, PublicationDto publicationDto) {
     log.info("Update publication by id {}", id);
     log.trace("Request body publicationDto {}", publicationDto);
-    return publicationService.updatePublication(id, publicationDto);
+    return publicationService.updateById(id, publicationDto);
   }
 
   @Override
   public ResponseEntity<Void> deletePublication(long id) {
     log.info("Delete publication by id {}", id);
-    publicationService.deletePublication(id);
+    publicationService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 

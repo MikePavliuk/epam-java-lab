@@ -32,7 +32,7 @@ public class PublicationServiceImpl implements PublicationService {
   private final SubscriptionRepository subscriptionRepository;
 
   @Override
-  public PublicationDto getPublication(long id) {
+  public PublicationDto getById(Long id) {
     log.info("Get publication by id");
     Optional<Publication> publication = publicationRepository.findById(id);
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
@@ -40,7 +40,7 @@ public class PublicationServiceImpl implements PublicationService {
   }
 
   @Override
-  public Page<PublicationDto> getAllPublications(Pageable pageable) {
+  public Page<PublicationDto> getAll(Pageable pageable) {
     log.info("Get all publications");
     return publicationRepository
         .findAll(pageable)
@@ -49,7 +49,7 @@ public class PublicationServiceImpl implements PublicationService {
 
   @Transactional
   @Override
-  public PublicationDto createPublication(PublicationDto publicationDto) {
+  public PublicationDto create(PublicationDto publicationDto) {
     log.info("Create publication");
 
     publicationDto.setGenre(
@@ -79,7 +79,7 @@ public class PublicationServiceImpl implements PublicationService {
 
   @Transactional
   @Override
-  public PublicationDto updatePublication(long id, PublicationDto publicationDto) {
+  public PublicationDto updateById(Long id, PublicationDto publicationDto) {
     log.info("Update publication with id");
 
     if (!publicationRepository.existsById(id)) {
@@ -99,7 +99,7 @@ public class PublicationServiceImpl implements PublicationService {
   }
 
   @Override
-  public void deletePublication(long id) {
+  public void deleteById(Long id) {
     log.info("Delete publication with id {}", id);
     publicationRepository.deleteById(id);
   }

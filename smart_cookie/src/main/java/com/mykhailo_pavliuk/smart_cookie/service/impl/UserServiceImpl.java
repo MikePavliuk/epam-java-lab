@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
   private final UserStatusRepository userStatusRepository;
 
   @Override
-  public UserDto getUser(long id) {
+  public UserDto getById(Long id) {
     log.info("Get user");
     Optional<User> user = userRepository.findById(id);
 
@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<UserDto> getAllUsers(Pageable pageable) {
+  public Page<UserDto> getAll(Pageable pageable) {
     log.info("Get all users");
     return userRepository.findAll(pageable).map(UserMapper.INSTANCE::mapUserToUserDto);
   }
 
   @Transactional
   @Override
-  public UserDto createUser(UserDto userDto) {
+  public UserDto create(UserDto userDto) {
     log.info("Create user with userDto");
 
     userDto.setRole(
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public UserDto updateUser(long id, UserDto userDto) {
+  public UserDto updateById(Long id, UserDto userDto) {
     log.info("Update user");
 
     if (!userRepository.existsById(id)) {
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public void deleteUser(long id) {
+  public void deleteById(Long id) {
     log.info("Delete user");
     userRepository.deleteById(id);
   }

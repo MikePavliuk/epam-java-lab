@@ -23,30 +23,30 @@ public class UserController implements UserApi {
   @Override
   public UserDto getUser(long id) {
     log.info("Get user by id {}", id);
-    return userService.getUser(id);
+    return userService.getById(id);
   }
 
   @Override
   public Page<UserDto> getAllUsers(Pageable pageable) {
     log.info("Get all users");
-    return userService.getAllUsers(pageable);
+    return userService.getAll(pageable);
   }
 
   @Override
   public UserDto createUser(UserDto userDto) {
-    return userService.createUser(userDto);
+    return userService.create(userDto);
   }
 
   @Override
   public UserDto updateUser(long id, UserDto userDto) {
     log.info("Update user by id {}", id);
-    return userService.updateUser(id, userDto);
+    return userService.updateById(id, userDto);
   }
 
   @Override
   public ResponseEntity<Void> deleteUser(long id) {
     log.info("Delete user by id {}", id);
-    userService.deleteUser(id);
+    userService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 
