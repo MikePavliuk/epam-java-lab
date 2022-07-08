@@ -15,6 +15,7 @@ import com.mykhailo_pavliuk.smart_cookie.repository.UserStatusRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import java.math.BigDecimal;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,8 @@ public class UserServiceImpl implements UserService {
     return userRepository.findAll(pageable).map(UserMapper.INSTANCE::mapUserToUserDto);
   }
 
+  @Transactional
+  @Override
   public UserDto createUser(UserDto userDto) {
     log.info("Create user with userDto");
 
@@ -70,6 +73,7 @@ public class UserServiceImpl implements UserService {
     return UserMapper.INSTANCE.mapUserToUserDto(user);
   }
 
+  @Transactional
   @Override
   public UserDto updateUser(long id, UserDto userDto) {
     log.info("Update user");
@@ -90,6 +94,7 @@ public class UserServiceImpl implements UserService {
     userRepository.deleteById(id);
   }
 
+  @Transactional
   @Override
   public UserDto addFunds(long id, BigDecimal amount) {
     log.info("Add funds");

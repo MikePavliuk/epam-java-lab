@@ -14,6 +14,7 @@ import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,7 @@ public class PublicationServiceImpl implements PublicationService {
         .map(PublicationMapper.INSTANCE::mapPublicationToPublicationDto);
   }
 
+  @Transactional
   @Override
   public PublicationDto createPublication(PublicationDto publicationDto) {
     log.info("Create publication");
@@ -75,6 +77,7 @@ public class PublicationServiceImpl implements PublicationService {
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
   }
 
+  @Transactional
   @Override
   public PublicationDto updatePublication(long id, PublicationDto publicationDto) {
     log.info("Update publication with id");
@@ -101,6 +104,7 @@ public class PublicationServiceImpl implements PublicationService {
     publicationRepository.deleteById(id);
   }
 
+  @Transactional
   @Override
   public List<PublicationDto> getPublicationsByUserId(long userId) {
     log.info("Get publications (subscriptions) by user id");
