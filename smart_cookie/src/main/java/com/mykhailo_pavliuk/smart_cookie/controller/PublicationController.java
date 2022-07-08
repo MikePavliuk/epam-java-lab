@@ -6,6 +6,8 @@ import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,9 +25,9 @@ public class PublicationController implements PublicationApi {
   }
 
   @Override
-  public List<PublicationDto> getAllPublications() {
+  public Page<PublicationDto> getAllPublications(Pageable pageable) {
     log.info("Get all publications");
-    return publicationService.getAllPublications();
+    return publicationService.getAllPublications(pageable);
   }
 
   @Override

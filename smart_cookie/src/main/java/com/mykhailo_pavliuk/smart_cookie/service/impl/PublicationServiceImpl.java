@@ -14,9 +14,10 @@ import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -38,11 +39,10 @@ public class PublicationServiceImpl implements PublicationService {
   }
 
   @Override
-  public List<PublicationDto> getAllPublications() {
+  public Page<PublicationDto> getAllPublications(Pageable pageable) {
     log.info("Get all publications");
-    return publicationRepository.findAll().stream()
-        .map(PublicationMapper.INSTANCE::mapPublicationToPublicationDto)
-        .collect(Collectors.toList());
+    return publicationRepository.findAll(pageable)
+        .map(PublicationMapper.INSTANCE::mapPublicationToPublicationDto);
   }
 
   @Override
