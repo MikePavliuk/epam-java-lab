@@ -1,76 +1,24 @@
 package com.mykhailo_pavliuk.smart_cookie.api;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
-import com.mykhailo_pavliuk.smart_cookie.dto.group.OnCreate;
-import com.mykhailo_pavliuk.smart_cookie.dto.group.OnUpdate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
 import javax.validation.constraints.Positive;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Api(tags = "User management API")
 @RequestMapping("/api/v1/users")
-public interface UserApi {
-
-  @ApiImplicitParams({
-    @ApiImplicitParam(name = "id", paramType = "path", required = true, value = "User id")
-  })
-  @ApiOperation("Get user")
-  @ResponseStatus(HttpStatus.OK)
-  @GetMapping("/{id}")
-  UserDto getUser(@PathVariable long id);
-
-  @ApiImplicitParams({
-    @ApiImplicitParam(name = "page", paramType = "path", value = "Page number starting from 0"),
-    @ApiImplicitParam(name = "size", paramType = "path", value = "Number of items to be displayed"),
-    @ApiImplicitParam(
-        name = "sort",
-        paramType = "path",
-        value = "Sorting params, for example: 'id,desc' (no space after comma!)"),
-  })
-  @ApiOperation("Get all users (also with ability to be pageable and sortable)")
-  @ResponseStatus(HttpStatus.OK)
-  @GetMapping()
-  Page<UserDto> getAllUsers(Pageable pageable);
-
-  @ApiOperation("Create user")
-  @ResponseStatus(HttpStatus.CREATED)
-  @PostMapping()
-  UserDto createUser(@RequestBody @Validated(OnCreate.class) UserDto userDto);
-
-  @ApiImplicitParams({
-    @ApiImplicitParam(name = "id", paramType = "path", required = true, value = "User id")
-  })
-  @ApiOperation("Update user")
-  @ResponseStatus(HttpStatus.OK)
-  @PatchMapping("/{id}")
-  UserDto updateUser(
-      @PathVariable long id, @RequestBody @Validated(OnUpdate.class) UserDto userDto);
-
-  @ApiImplicitParams({
-    @ApiImplicitParam(name = "id", paramType = "path", required = true, value = "User id")
-  })
-  @ApiOperation("Delete user")
-  @ResponseStatus(HttpStatus.OK)
-  @DeleteMapping("/{id}")
-  ResponseEntity<Void> deleteUser(@PathVariable long id);
+public interface UserApi extends CrudApi<UserDto, Long> {
 
   @ApiImplicitParams({
     @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id"),

@@ -21,30 +21,30 @@ public class UserController implements UserApi {
   private final SubscriptionService subscriptionService;
 
   @Override
-  public UserDto getUser(long id) {
+  public UserDto getById(Long id) {
     log.info("Get user by id {}", id);
     return userService.getById(id);
   }
 
   @Override
-  public Page<UserDto> getAllUsers(Pageable pageable) {
+  public Page<UserDto> getAll(Pageable pageable) {
     log.info("Get all users");
     return userService.getAll(pageable);
   }
 
   @Override
-  public UserDto createUser(UserDto userDto) {
+  public UserDto create(UserDto userDto) {
     return userService.create(userDto);
   }
 
   @Override
-  public UserDto updateUser(long id, UserDto userDto) {
+  public UserDto updateById(Long id, UserDto userDto) {
     log.info("Update user by id {}", id);
     return userService.updateById(id, userDto);
   }
 
   @Override
-  public ResponseEntity<Void> deleteUser(long id) {
+  public ResponseEntity<Void> deleteById(Long id) {
     log.info("Delete user by id {}", id);
     userService.deleteById(id);
     return ResponseEntity.noContent().build();
