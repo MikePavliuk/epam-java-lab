@@ -41,7 +41,8 @@ public class PublicationServiceImpl implements PublicationService {
   @Override
   public Page<PublicationDto> getAllPublications(Pageable pageable) {
     log.info("Get all publications");
-    return publicationRepository.findAll(pageable)
+    return publicationRepository
+        .findAll(pageable)
         .map(PublicationMapper.INSTANCE::mapPublicationToPublicationDto);
   }
 

@@ -40,13 +40,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Page<UserDto> getAllUsers(Pageable pageable) {
     log.info("Get all users");
-
-    Page<UserDto> userDtos = userRepository.findAll(pageable)
-        .map(UserMapper.INSTANCE::mapUserToUserDto);
-
-    log.info("userDtos {}", userDtos);
-
-    return userDtos;
+    return userRepository.findAll(pageable).map(UserMapper.INSTANCE::mapUserToUserDto);
   }
 
   public UserDto createUser(UserDto userDto) {

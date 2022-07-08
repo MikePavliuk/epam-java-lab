@@ -38,9 +38,12 @@ public interface UserApi {
   UserDto getUser(@PathVariable long id);
 
   @ApiImplicitParams({
-      @ApiImplicitParam(name = "page", paramType = "path", value = "Page number starting from 0"),
-      @ApiImplicitParam(name = "size", paramType = "path", value = "Number of items to be displayed"),
-      @ApiImplicitParam(name = "sort", paramType = "path", value = "Sorting params, for example: 'id,desc' (no space after comma!)"),
+    @ApiImplicitParam(name = "page", paramType = "path", value = "Page number starting from 0"),
+    @ApiImplicitParam(name = "size", paramType = "path", value = "Number of items to be displayed"),
+    @ApiImplicitParam(
+        name = "sort",
+        paramType = "path",
+        value = "Sorting params, for example: 'id,desc' (no space after comma!)"),
   })
   @ApiOperation("Get all users (also with ability to be pageable and sortable)")
   @ResponseStatus(HttpStatus.OK)
