@@ -33,15 +33,17 @@ public class PublicationServiceImpl implements PublicationService {
 
   @Override
   public PublicationDto getById(Long id) {
-    log.info("Get publication by id");
+    log.info("Started getting publication by id");
     Optional<Publication> publication = publicationRepository.findById(id);
+    log.info("Finished getting publication by id ({})", publication);
+
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
         publication.orElseThrow(EntityNotFoundException::new));
   }
 
   @Override
   public Page<PublicationDto> getAll(Pageable pageable) {
-    log.info("Get all publications");
+    log.info("Getting all publications");
     return publicationRepository
         .findAll(pageable)
         .map(PublicationMapper.INSTANCE::mapPublicationToPublicationDto);
@@ -50,7 +52,7 @@ public class PublicationServiceImpl implements PublicationService {
   @Transactional
   @Override
   public PublicationDto create(PublicationDto publicationDto) {
-    log.info("Create publication");
+    log.info("Started creating publication");
 
     publicationDto.setGenre(
         genreRepository
@@ -74,13 +76,16 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     publication = publicationRepository.save(publication);
+
+    log.info("Finished creating publication ({})", publication);
+
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
   }
 
   @Transactional
   @Override
   public PublicationDto updateById(Long id, PublicationDto publicationDto) {
-    log.info("Update publication with id");
+    log.info("Started updating publication by id");
 
     if (!publicationRepository.existsById(id)) {
       throw new EntityNotFoundException("Publication with id " + id + " is not found");
@@ -95,19 +100,22 @@ public class PublicationServiceImpl implements PublicationService {
 
     publication = publicationRepository.save(publication);
 
+    log.info("Finished updating publication by id ({})", publication);
+
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
   }
 
   @Override
   public void deleteById(Long id) {
-    log.info("Delete publication with id {}", id);
+    log.info("Started deleting publication by id");
     publicationRepository.deleteById(id);
+    log.info("Finished deleting publication by id");
   }
 
   @Transactional
   @Override
   public List<PublicationDto> getPublicationsByUserId(long userId) {
-    log.info("Get publications (subscriptions) by user id");
+    log.info("Started getting publications (subscriptions) by user id");
     List<Subscription> subscriptions = subscriptionRepository.getAllSubscriptionsByUserId(userId);
     List<PublicationDto> publications = new ArrayList<>();
     subscriptions.forEach(
@@ -117,6 +125,10 @@ public class PublicationServiceImpl implements PublicationService {
                     publicationRepository
                         .findById(subscription.getPublication().getId())
                         .orElseThrow(EntityNotFoundException::new))));
+
+    log.info("Got publications: {}", publications);
+    log.trace("Finished getting publications (subscriptions) by user id");
+
     return publications;
   }
 }

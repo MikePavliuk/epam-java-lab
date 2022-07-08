@@ -28,7 +28,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
   @Transactional
   @Override
   public void addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
-    log.info("Add subscription to user");
+    log.info("Started adding subscription to user");
     Optional<User> user = userRepository.findById(userId);
     Optional<Publication> publication = publicationRepository.findById(publicationId);
 
@@ -55,5 +55,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     subscriptionRepository.subscribeUserToPublication(
         userId, publicationId, periodInMonths, LocalDate.now());
+
+    log.info("Finished adding subscription to user");
   }
 }

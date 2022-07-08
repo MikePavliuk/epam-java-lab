@@ -28,18 +28,19 @@ public class UserController implements UserApi {
 
   @Override
   public Page<UserDto> getAll(Pageable pageable) {
-    log.info("Get all users");
+    log.info("Get all users with Pageable {}", pageable);
     return userService.getAll(pageable);
   }
 
   @Override
   public UserDto create(UserDto userDto) {
+    log.info("Create user {}", userDto);
     return userService.create(userDto);
   }
 
   @Override
   public UserDto updateById(Long id, UserDto userDto) {
-    log.info("Update user by id {}", id);
+    log.info("Update user by id {} with request body {}", id, userDto);
     return userService.updateById(id, userDto);
   }
 
@@ -53,7 +54,11 @@ public class UserController implements UserApi {
   @Override
   public ResponseEntity<Void> addSubscriptionToUser(
       long userId, long publicationId, int periodInMonths) {
-    log.info("Subscribe user to publication");
+    log.info(
+        "Subscribe user with id '{}' to publication with id '{}' for {} month(s)",
+        userId,
+        publicationId,
+        periodInMonths);
     subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
     return ResponseEntity.noContent().build();
   }

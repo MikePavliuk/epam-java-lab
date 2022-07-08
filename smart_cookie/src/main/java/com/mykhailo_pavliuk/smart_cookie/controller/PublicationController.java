@@ -26,7 +26,7 @@ public class PublicationController implements PublicationApi {
 
   @Override
   public Page<PublicationDto> getAll(Pageable pageable) {
-    log.info("Get all publications");
+    log.info("Get all publications with Pageable {}", pageable);
     return publicationService.getAll(pageable);
   }
 
@@ -38,8 +38,7 @@ public class PublicationController implements PublicationApi {
 
   @Override
   public PublicationDto updateById(Long id, PublicationDto publicationDto) {
-    log.info("Update publication by id {}", id);
-    log.trace("Request body publicationDto {}", publicationDto);
+    log.info("Update publication by id {} with request body {}", id, publicationDto);
     return publicationService.updateById(id, publicationDto);
   }
 

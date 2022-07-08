@@ -26,28 +26,30 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final UserStatusRepository userStatusRepository;
 
   @Override
   public UserDto getById(Long id) {
-    log.info("Get user");
+    log.info("Started getting user by id");
     Optional<User> user = userRepository.findById(id);
+    log.info("Finished getting user by id ({})", user);
 
     return UserMapper.INSTANCE.mapUserToUserDto(user.orElseThrow(EntityNotFoundException::new));
   }
 
   @Override
   public Page<UserDto> getAll(Pageable pageable) {
-    log.info("Get all users");
+    log.info("Getting all users");
     return userRepository.findAll(pageable).map(UserMapper.INSTANCE::mapUserToUserDto);
   }
 
   @Transactional
   @Override
   public UserDto create(UserDto userDto) {
-    log.info("Create user with userDto");
+    log.info("Started creating user");
 
     userDto.setRole(
         roleRepository
@@ -70,13 +72,15 @@ public class UserServiceImpl implements UserService {
 
     user = userRepository.save(user);
 
+    log.info("Finished creating user ({})", user);
+
     return UserMapper.INSTANCE.mapUserToUserDto(user);
   }
 
   @Transactional
   @Override
   public UserDto updateById(Long id, UserDto userDto) {
-    log.info("Update user");
+    log.info("Started updating user by id");
 
     if (!userRepository.existsById(id)) {
       throw new EntityNotFoundException("User with id " + id + " is not found");
@@ -85,19 +89,23 @@ public class UserServiceImpl implements UserService {
     User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
     user.getUserDetail().setUser(user);
     user = userRepository.save(user);
+
+    log.info("Finished updating user by id ({})", user);
+
     return UserMapper.INSTANCE.mapUserToUserDto(user);
   }
 
   @Override
   public void deleteById(Long id) {
-    log.info("Delete user");
+    log.info("Started deleting user by id");
     userRepository.deleteById(id);
+    log.info("Finished deleting user by id");
   }
 
   @Transactional
   @Override
   public UserDto addFunds(long id, BigDecimal amount) {
-    log.info("Add funds");
+    log.info("Started adding funds");
     Optional<User> user = userRepository.findById(id);
 
     if (user.isEmpty()) {
@@ -109,13 +117,16 @@ public class UserServiceImpl implements UserService {
     }
 
     user.get().getUserDetail().setBalance(user.get().getUserDetail().getBalance().add(amount));
-
     User updatedUser = userRepository.save(user.get());
+
+    log.info("Finished adding funds");
+
     return UserMapper.INSTANCE.mapUserToUserDto(updatedUser);
   }
 
   @Override
   public boolean existsByEmail(String email) {
+    log.info("Checking if exists by email");
     return userRepository.existsByEmail(email);
   }
 }
