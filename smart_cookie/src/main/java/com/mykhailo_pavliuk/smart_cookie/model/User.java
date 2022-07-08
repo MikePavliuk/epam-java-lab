@@ -40,7 +40,7 @@ public class User {
 
   @ToString.Exclude private String password;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   @JsonManagedReference
   private UserDetail userDetail;
 
@@ -52,7 +52,7 @@ public class User {
   @JoinColumn(name = "role_id", referencedColumnName = "id")
   private Role role;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
   @Exclude
   private Set<Subscription> subscription;
 
