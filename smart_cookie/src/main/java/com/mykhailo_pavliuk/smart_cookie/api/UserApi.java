@@ -79,7 +79,7 @@ public interface UserApi {
   @ApiOperation("Subscribe user to publication")
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{userId}/publications/{publicationId}")
-  UserDto addSubscriptionToUser(
+  ResponseEntity<Void> addSubscriptionToUser(
       @PathVariable long userId,
       @PathVariable long publicationId,
       @RequestParam @Positive int periodInMonths);

@@ -39,7 +39,6 @@ public class UserController implements UserApi {
   @Override
   public UserDto updateUser(long id, UserDto userDto) {
     log.info("Update user by id {}", id);
-    log.trace("Request body userDto {}", userDto);
     return userService.updateUser(id, userDto);
   }
 
@@ -51,13 +50,11 @@ public class UserController implements UserApi {
   }
 
   @Override
-  public UserDto addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
-    log.info(
-        "Subscribe user with id {} to publication with id {} for {} (period in months)",
-        userId,
-        publicationId,
-        periodInMonths);
-    return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
+  public ResponseEntity<Void> addSubscriptionToUser(
+      long userId, long publicationId, int periodInMonths) {
+    log.info("Subscribe user to publication");
+    subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
+    return ResponseEntity.noContent().build();
   }
 
   @Override

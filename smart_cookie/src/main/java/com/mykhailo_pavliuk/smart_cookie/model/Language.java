@@ -2,49 +2,40 @@ package com.mykhailo_pavliuk.smart_cookie.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
-import javax.persistence.CascadeType;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.ToString.Exclude;
 import org.hibernate.Hibernate;
 
 @Entity
-@Table(name = "publication_info")
+@Table(name = "language")
 @Getter
 @Setter
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PublicationInfo {
+public class Language {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "language_id", referencedColumnName = "id")
-  private Language language;
-
-  private String title;
-
-  private String description;
+  private String name;
 
   @JsonIgnore
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "publication_id", nullable = false)
-  @ToString.Exclude
-  private Publication publication;
+  @OneToMany(mappedBy = "language")
+  @Exclude
+  private Set<PublicationInfo> publicationInfos;
 
   @Override
   public boolean equals(Object o) {
@@ -54,8 +45,8 @@ public class PublicationInfo {
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
       return false;
     }
-    PublicationInfo that = (PublicationInfo) o;
-    return id != null && Objects.equals(id, that.id);
+    Language language = (Language) o;
+    return id != null && Objects.equals(id, language.id);
   }
 
   @Override
