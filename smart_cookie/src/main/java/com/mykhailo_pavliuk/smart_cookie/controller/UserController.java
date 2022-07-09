@@ -38,6 +38,13 @@ public class UserController {
   }
 
   @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/search")
+  public UserDto getByEmail(@RequestParam String email) {
+    log.info("Get user by email {}", email);
+    return userService.getByEmail(email);
+  }
+
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping()
   public List<UserDto> getAll() {
     log.info("Get all users");

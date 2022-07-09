@@ -65,6 +65,12 @@ public class UserRepositoryImpl implements UserRepository {
   }
 
   @Override
+  public Optional<User> findByEmail(String email) {
+    log.info("Finding user by email");
+    return list.stream().filter(user -> user.getEmail().equals(email)).findFirst();
+  }
+
+  @Override
   public boolean existsByEmail(String email) {
     log.info("Checking if user exists by email");
     return list.stream().anyMatch(user -> user.getEmail().equals(email));
