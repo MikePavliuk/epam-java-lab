@@ -92,6 +92,15 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserDto getByEmail(String email) {
+    log.info("Started getting user by email");
+    Optional<User> user = userRepository.findByEmail(email);
+    log.info("Finished getting user by email ({})", user);
+
+    return UserMapper.INSTANCE.mapUserToUserDto(user.orElseThrow(EntityNotFoundException::new));
+  }
+
+  @Override
   public UserDto addFunds(long id, BigDecimal amount) {
     log.info("Started adding funds");
     Optional<User> user = userRepository.findById(id);
