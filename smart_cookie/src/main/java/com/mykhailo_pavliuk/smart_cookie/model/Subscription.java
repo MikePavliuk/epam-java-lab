@@ -7,8 +7,12 @@ import lombok.Data;
 @Data
 @Builder
 public class Subscription {
-  private Long userId;
-  private Long publicationId;
+
+  private long userId;
+
+  private long publicationId;
+
+  private int periodInMonths;
+
   private LocalDate startDate;
-  private Integer periodInMonths;
 }

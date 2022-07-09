@@ -20,44 +20,46 @@ public class UserController implements UserApi {
   private final SubscriptionService subscriptionService;
 
   @Override
-  public UserDto getUser(long id) {
+  public UserDto getById(Long id) {
     log.info("Get user by id {}", id);
-    return userService.getUser(id);
+    return userService.getById(id);
   }
 
   @Override
-  public List<UserDto> getAllUsers() {
+  public List<UserDto> getAll() {
     log.info("Get all users");
-    return userService.getAllUsers();
+    return userService.getAll();
   }
 
   @Override
-  public UserDto createUser(UserDto userDto) {
-    return userService.createUser(userDto);
+  public UserDto create(UserDto userDto) {
+    log.info("Create user {}", userDto);
+    return userService.create(userDto);
   }
 
   @Override
-  public UserDto updateUser(long id, UserDto userDto) {
-    log.info("Update user by id {}", id);
-    log.trace("Request body userDto {}", userDto);
-    return userService.updateUser(id, userDto);
+  public UserDto updateById(Long id, UserDto userDto) {
+    log.info("Update user by id {} with request body {}", id, userDto);
+    return userService.updateById(id, userDto);
   }
 
   @Override
-  public ResponseEntity<Void> deleteUser(long id) {
+  public ResponseEntity<Void> deleteById(Long id) {
     log.info("Delete user by id {}", id);
-    userService.deleteUser(id);
+    userService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 
   @Override
-  public UserDto addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
+  public ResponseEntity<Void> addSubscriptionToUser(
+      long userId, long publicationId, int periodInMonths) {
     log.info(
-        "Subscribe user with id {} to publication with id {} for {} (period in months)",
+        "Subscribe user with id '{}' to publication with id '{}' for {} month(s)",
         userId,
         publicationId,
         periodInMonths);
-    return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
+    subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
+    return ResponseEntity.noContent().build();
   }
 
   @Override

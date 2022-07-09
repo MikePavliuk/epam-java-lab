@@ -1,6 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.util;
 
-import com.mykhailo_pavliuk.smart_cookie.model.enums.Status;
+import com.mykhailo_pavliuk.smart_cookie.dto.UserStatusDto;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +18,9 @@ public class TotalUsersInfoContributor implements InfoContributor {
   @Override
   public void contribute(Info.Builder builder) {
     Map<String, Long> userDetails = new HashMap<>();
-    for (Status status : Status.values()) {
-      userDetails.put(status.name(), userRepository.countByStatus(status));
+    for (UserStatusDto status : UserStatusDto.values()) {
+      userDetails.put(
+          status.name(), userRepository.countUsersByStatus(status.name().toLowerCase()));
     }
 
     builder.withDetail("users", userDetails);

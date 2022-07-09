@@ -2,9 +2,9 @@ package com.mykhailo_pavliuk.smart_cookie.dto;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.group.OnCreate;
 import com.mykhailo_pavliuk.smart_cookie.dto.group.OnUpdate;
-import com.mykhailo_pavliuk.smart_cookie.model.enums.Genre;
+import com.mykhailo_pavliuk.smart_cookie.model.Genre;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -28,5 +28,5 @@ public class PublicationDto {
 
   @Valid
   @NotNull(message = "{validation.publicationInfos.not_null}")
-  private List<PublicationInfoDto> publicationInfos;
+  private Set<PublicationInfoDto> publicationInfos;
 }

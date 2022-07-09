@@ -1,10 +1,12 @@
 package com.mykhailo_pavliuk.smart_cookie.repository.impl;
 
-import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.model.Publication;
+import com.mykhailo_pavliuk.smart_cookie.model.PublicationInfo;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -15,43 +17,57 @@ public class PublicationRepositoryImpl implements PublicationRepository {
   private final List<Publication> list = new ArrayList<>();
 
   @Override
-  public Publication getPublication(long id) {
-    log.info("Get publication with id {}", id);
-    return list.stream()
-        .filter(publication -> publication.getId() == id)
-        .findFirst()
-        .orElseThrow(() -> new EntityNotFoundException("Publication is not found"));
+  public Optional<Publication> findById(Long id) {
+    log.info("Finding publication by id");
+    return list.stream().filter(publication -> publication.getId().equals(id)).findFirst();
   }
 
   @Override
-  public List<Publication> getAllPublications() {
-    log.info("Get all publications");
+  public List<Publication> getAll() {
+    log.info("Getting all publications");
     return new ArrayList<>(list);
   }
 
   @Override
-  public Publication createPublication(Publication publication) {
-    log.info("Create publication {}", publication);
-    publication.setId((long) (list.size() + 1));
-    list.add(publication);
-    return publication;
-  }
+  public Publication save(Publication publication) {
+    log.info("Saving publication");
 
-  @Override
-  public Publication updatePublication(long id, Publication publication) {
-    log.info("Update publication with id {}", id);
-    boolean isDeleted = list.removeIf(p -> p.getId().equals(id));
-    if (isDeleted) {
-      list.add(publication);
+    if (publication.getId() != null) {
+      list.removeIf(p -> Objects.equals(p.getId(), publication.getId()));
+      list.add(0, publication);
+      log.info("Finished with updating publication");
     } else {
-      throw new EntityNotFoundException("Publication is not found");
+      publication.setId(list.isEmpty() ? 1L : (list.get(list.size() - 1).getId() + 1));
+
+      long startId =
+          list.isEmpty()
+              ? 1L
+              : (list.get(list.size() - 1)
+                      .getPublicationInfos()
+                      .get(list.get(list.size() - 1).getPublicationInfos().size() - 1)
+                      .getId()
+                  + 1);
+
+      for (PublicationInfo publicationInfo : publication.getPublicationInfos()) {
+        publicationInfo.setId(startId++);
+      }
+
+      list.add(publication);
+      log.info("Finished with creating new user");
     }
+
     return publication;
   }
 
   @Override
-  public void deletePublication(long id) {
-    log.info("Delete publication with id {}", id);
+  public void deleteById(Long id) {
+    log.info("Deleting publication");
     list.removeIf(publication -> publication.getId().equals(id));
+  }
+
+  @Override
+  public boolean existsById(Long id) {
+    log.info("Check if exists publication by id");
+    return list.stream().anyMatch(publication -> publication.getId().equals(id));
   }
 }

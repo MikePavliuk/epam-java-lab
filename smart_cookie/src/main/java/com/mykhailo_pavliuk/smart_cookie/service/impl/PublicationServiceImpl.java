@@ -1,6 +1,7 @@
 package com.mykhailo_pavliuk.smart_cookie.service.impl;
 
 import com.mykhailo_pavliuk.smart_cookie.dto.PublicationDto;
+import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.mapper.PublicationMapper;
 import com.mykhailo_pavliuk.smart_cookie.model.Publication;
 import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
@@ -9,6 +10,7 @@ import com.mykhailo_pavliuk.smart_cookie.repository.SubscriptionRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,55 +24,77 @@ public class PublicationServiceImpl implements PublicationService {
   private final PublicationRepository publicationRepository;
   private final SubscriptionRepository subscriptionRepository;
 
-  @Override
-  public PublicationDto getPublication(long id) {
-    log.info("Get publication by id {}", id);
-    Publication publication = publicationRepository.getPublication(id);
-    return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
+  public PublicationDto getById(Long id) {
+    log.info("Started getting publication by id");
+    Optional<Publication> publication = publicationRepository.findById(id);
+    log.info("Finished getting publication by id ({})", publication);
+
+    return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
+        publication.orElseThrow(EntityNotFoundException::new));
   }
 
   @Override
-  public List<PublicationDto> getAllPublications() {
-    log.info("Get all publications");
-    return publicationRepository.getAllPublications().stream()
+  public List<PublicationDto> getAll() {
+    log.info("Getting all publications");
+    return publicationRepository.getAll().stream()
         .map(PublicationMapper.INSTANCE::mapPublicationToPublicationDto)
         .collect(Collectors.toList());
   }
 
   @Override
-  public PublicationDto createPublication(PublicationDto publicationDto) {
-    log.info("Create publication {}", publicationDto);
+  public PublicationDto create(PublicationDto publicationDto) {
+    log.info("Started creating publication");
+
     Publication publication =
         PublicationMapper.INSTANCE.mapPublicationDtoToPublication(publicationDto);
-    publication = publicationRepository.createPublication(publication);
+    publication = publicationRepository.save(publication);
+
+    log.info("Finished creating publication ({})", publication);
+
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
   }
 
   @Override
-  public PublicationDto updatePublication(long id, PublicationDto publicationDto) {
-    log.info("Update publication with id {}", id);
+  public PublicationDto updateById(Long id, PublicationDto publicationDto) {
+    log.info("Started updating publication by id");
+
+    if (!publicationRepository.existsById(id)) {
+      throw new EntityNotFoundException("Publication with id " + id + " is not found");
+    }
+
     Publication publication =
         PublicationMapper.INSTANCE.mapPublicationDtoToPublication(publicationDto);
-    publication = publicationRepository.updatePublication(id, publication);
+
+    publication = publicationRepository.save(publication);
+
+    log.info("Finished updating publication by id ({})", publication);
+
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
   }
 
   @Override
-  public void deletePublication(long id) {
-    log.info("Delete publication with id {}", id);
-    publicationRepository.deletePublication(id);
+  public void deleteById(Long id) {
+    log.info("Started deleting publication by id");
+    publicationRepository.deleteById(id);
+    log.info("Finished deleting publication by id");
   }
 
   @Override
   public List<PublicationDto> getPublicationsByUserId(long userId) {
-    log.info("Get publications by user id {}", userId);
+    log.info("Started getting publications (subscriptions) by user id");
     List<Subscription> subscriptions = subscriptionRepository.getAllSubscriptionsByUserId(userId);
     List<PublicationDto> publications = new ArrayList<>();
     subscriptions.forEach(
         subscription ->
             publications.add(
                 PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
-                    publicationRepository.getPublication(subscription.getPublicationId()))));
+                    publicationRepository
+                        .findById(subscription.getPublicationId())
+                        .orElseThrow(EntityNotFoundException::new))));
+
+    log.info("Got publications: {}", publications);
+    log.trace("Finished getting publications (subscriptions) by user id");
+
     return publications;
   }
 }
