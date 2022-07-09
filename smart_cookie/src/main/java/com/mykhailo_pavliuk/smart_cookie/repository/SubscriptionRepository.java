@@ -11,7 +11,7 @@ public interface SubscriptionRepository extends CrudRepository<Subscription, Lon
 
   @Modifying
   void subscribeUserToPublication(
-      long userId, long publicationOd, int periodInMonths, LocalDate startDate);
+      long userId, long publicationId, int periodInMonths, LocalDate startDate);
 
   List<Subscription> getAllSubscriptionsByUserId(@Param("userId") long userId);
 }
