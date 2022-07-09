@@ -102,6 +102,15 @@ public class UserServiceImpl implements UserService {
     log.info("Finished deleting user by id");
   }
 
+  @Override
+  public UserDto getByEmail(String email) {
+    log.info("Started getting user by email");
+    Optional<User> user = userRepository.findByEmail(email);
+    log.info("Finished getting user by email ({})", user);
+
+    return UserMapper.INSTANCE.mapUserToUserDto(user.orElseThrow(EntityNotFoundException::new));
+  }
+
   @Transactional
   @Override
   public UserDto addFunds(long id, BigDecimal amount) {

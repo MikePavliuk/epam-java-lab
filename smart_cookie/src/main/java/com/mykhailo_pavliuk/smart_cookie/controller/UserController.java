@@ -52,6 +52,12 @@ public class UserController implements UserApi {
   }
 
   @Override
+  public UserDto getByEmail(String email) {
+    log.info("Get user by email {}", email);
+    return userService.getByEmail(email);
+  }
+
+  @Override
   public ResponseEntity<Void> addSubscriptionToUser(
       long userId, long publicationId, int periodInMonths) {
     log.info(

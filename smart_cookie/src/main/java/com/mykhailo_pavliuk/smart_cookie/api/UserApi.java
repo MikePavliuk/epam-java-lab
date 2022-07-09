@@ -6,9 +6,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.math.BigDecimal;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +21,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Api(tags = "User management API")
 @RequestMapping("/api/v1/users")
 public interface UserApi extends CrudApi<UserDto, Long> {
+
+  @ApiImplicitParams({
+    @ApiImplicitParam(name = "email", paramType = "query", required = true, value = "User email")
+  })
+  @ApiOperation("Get (search) user by email")
+  @ResponseStatus(HttpStatus.OK)
+  @GetMapping("/search")
+  UserDto getByEmail(@RequestParam @Email String email);
 
   @ApiImplicitParams({
     @ApiImplicitParam(name = "userId", paramType = "path", required = true, value = "User id"),
