@@ -6,9 +6,13 @@ import lombok.Data;
 
 @Data
 @Builder
-public final class UserDetail {
+public class UserDetail {
+
   private Long id;
+
   private String firstName;
+
   private String lastName;
+
   private BigDecimal balance;
 }

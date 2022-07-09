@@ -32,52 +32,53 @@ public class UserController {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{id}")
-  public UserDto getUser(@PathVariable long id) {
+  public UserDto getById(@PathVariable long id) {
     log.info("Get user by id {}", id);
-    return userService.getUser(id);
+    return userService.getById(id);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping()
-  public List<UserDto> getAllUsers() {
+  public List<UserDto> getAll() {
     log.info("Get all users");
-    return userService.getAllUsers();
+    return userService.getAll();
   }
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping()
-  public UserDto createUser(@RequestBody UserDto userDto) {
-    return userService.createUser(userDto);
+  public UserDto create(@RequestBody UserDto userDto) {
+    log.info("Create user {}", userDto);
+    return userService.create(userDto);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @PatchMapping("/{id}")
-  public UserDto updateUser(@PathVariable long id, @RequestBody UserDto userDto) {
-    log.info("Update user by id {}", id);
-    log.trace("Request body userDto {}", userDto);
-    return userService.updateUser(id, userDto);
+  public UserDto updateById(@PathVariable long id, @RequestBody UserDto userDto) {
+    log.info("Update user by id {} with request body {}", id, userDto);
+    return userService.updateById(id, userDto);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteUser(@PathVariable long id) {
+  public ResponseEntity<Void> deleteById(@PathVariable long id) {
     log.info("Delete user by id {}", id);
-    userService.deleteUser(id);
+    userService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{userId}/publications/{publicationId}")
-  public UserDto addSubscriptionToUser(
+  public ResponseEntity<Void> addSubscriptionToUser(
       @PathVariable long userId,
       @PathVariable long publicationId,
       @RequestParam int periodInMonths) {
     log.info(
-        "Subscribe user with id {} to publication with id {} for {} (period in months)",
+        "Subscribe user with id '{}' to publication with id '{}' for {} month(s)",
         userId,
         publicationId,
         periodInMonths);
-    return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
+    subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
+    return ResponseEntity.noContent().build();
   }
 
   @ResponseStatus(HttpStatus.OK)

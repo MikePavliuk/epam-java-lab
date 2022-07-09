@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,39 +27,38 @@ public class PublicationController {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{id}")
-  public PublicationDto getPublication(@PathVariable long id) {
+  public PublicationDto getById(@PathVariable long id) {
     log.info("Get publication by id {}", id);
-    return publicationService.getPublication(id);
+    return publicationService.getById(id);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping
-  public List<PublicationDto> getAllPublications() {
+  public List<PublicationDto> getAll() {
     log.info("Get all publications");
-    return publicationService.getAllPublications();
+    return publicationService.getAll();
   }
 
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping
-  public PublicationDto createPublication(@RequestBody PublicationDto publicationDto) {
+  public PublicationDto create(@RequestBody PublicationDto publicationDto) {
     log.info("Create publication {}", publicationDto);
-    return publicationService.createPublication(publicationDto);
+    return publicationService.create(publicationDto);
   }
 
   @ResponseStatus(HttpStatus.OK)
-  @PutMapping(value = "/{id}")
-  public PublicationDto updatePublication(
+  @PatchMapping(value = "/{id}")
+  public PublicationDto updateById(
       @PathVariable long id, @RequestBody PublicationDto publicationDto) {
-    log.info("Update publication by id {}", id);
-    log.trace("Request body publicationDto {}", publicationDto);
-    return publicationService.updatePublication(id, publicationDto);
+    log.info("Update publication by id {} with request body {}", id, publicationDto);
+    return publicationService.updateById(id, publicationDto);
   }
 
   @ResponseStatus(HttpStatus.OK)
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deletePublication(@PathVariable long id) {
     log.info("Delete publication by id {}", id);
-    publicationService.deletePublication(id);
+    publicationService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
 
