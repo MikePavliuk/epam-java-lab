@@ -2,6 +2,7 @@ package com.mykhailo_pavliuk.smart_cookie.dto;
 
 import com.mykhailo_pavliuk.smart_cookie.model.Role;
 import com.mykhailo_pavliuk.smart_cookie.model.UserStatus;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -21,4 +22,6 @@ public class UserDto {
   private UserStatus status;
 
   private Role role;
+
+  List<SubscriptionDto> subscriptions;
 }

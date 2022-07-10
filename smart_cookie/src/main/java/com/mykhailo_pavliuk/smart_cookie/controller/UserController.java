@@ -75,7 +75,7 @@ public class UserController {
 
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{userId}/publications/{publicationId}")
-  public ResponseEntity<Void> addSubscriptionToUser(
+  public UserDto addSubscriptionToUser(
       @PathVariable long userId,
       @PathVariable long publicationId,
       @RequestParam int periodInMonths) {
@@ -84,8 +84,7 @@ public class UserController {
         userId,
         publicationId,
         periodInMonths);
-    subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
-    return ResponseEntity.noContent().build();
+    return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
   }
 
   @ResponseStatus(HttpStatus.OK)

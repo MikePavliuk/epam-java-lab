@@ -4,11 +4,9 @@ import com.mykhailo_pavliuk.smart_cookie.dto.PublicationDto;
 import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.mapper.PublicationMapper;
 import com.mykhailo_pavliuk.smart_cookie.model.Publication;
-import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.SubscriptionRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,24 +75,5 @@ public class PublicationServiceImpl implements PublicationService {
     log.info("Started deleting publication by id");
     publicationRepository.deleteById(id);
     log.info("Finished deleting publication by id");
-  }
-
-  @Override
-  public List<PublicationDto> getPublicationsByUserId(long userId) {
-    log.info("Started getting publications (subscriptions) by user id");
-    List<Subscription> subscriptions = subscriptionRepository.getAllSubscriptionsByUserId(userId);
-    List<PublicationDto> publications = new ArrayList<>();
-    subscriptions.forEach(
-        subscription ->
-            publications.add(
-                PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
-                    publicationRepository
-                        .findById(subscription.getPublicationId())
-                        .orElseThrow(EntityNotFoundException::new))));
-
-    log.info("Got publications: {}", publications);
-    log.trace("Finished getting publications (subscriptions) by user id");
-
-    return publications;
   }
 }
