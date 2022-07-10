@@ -1,8 +1,8 @@
 package com.mykhailo_pavliuk.smart_cookie.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.ToString.Exclude;
 import org.hibernate.Hibernate;
 
 @Entity
@@ -53,8 +52,8 @@ public class User {
   private Role role;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  @Exclude
-  private Set<Subscription> subscription;
+  @ToString.Exclude
+  private List<Subscription> subscriptions;
 
   @Override
   public boolean equals(Object o) {

@@ -5,6 +5,7 @@ import com.mykhailo_pavliuk.smart_cookie.dto.group.OnUpdate;
 import com.mykhailo_pavliuk.smart_cookie.model.Role;
 import com.mykhailo_pavliuk.smart_cookie.model.UserStatus;
 import com.mykhailo_pavliuk.smart_cookie.util.validation.unique.Unique;
+import java.util.List;
 import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -43,4 +44,6 @@ public class UserDto {
   @Null(message = "{validation.role.null}", groups = OnCreate.class)
   @NotNull(message = "{validation.role.not_null}", groups = OnUpdate.class)
   private Role role;
+
+  @Valid List<SubscriptionDto> subscriptions;
 }

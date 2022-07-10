@@ -66,7 +66,6 @@ public class UserServiceImpl implements UserService {
     UserDetail userDetail =
         UserDetailMapper.INSTANCE.mapUserDetailDtoToUserDetail(userDto.getUserDetail());
     userDetail.setBalance(BigDecimal.ZERO);
-
     user.setUserDetail(userDetail);
     userDetail.setUser(user);
 

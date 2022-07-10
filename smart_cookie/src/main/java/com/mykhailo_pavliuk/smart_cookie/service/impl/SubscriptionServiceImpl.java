@@ -1,7 +1,9 @@
 package com.mykhailo_pavliuk.smart_cookie.service.impl;
 
+import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
 import com.mykhailo_pavliuk.smart_cookie.exception.EntityIllegalArgumentException;
 import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
+import com.mykhailo_pavliuk.smart_cookie.mapper.UserMapper;
 import com.mykhailo_pavliuk.smart_cookie.model.Publication;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
@@ -27,7 +29,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
   @Transactional
   @Override
-  public void addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
+  public UserDto addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
     log.info("Started adding subscription to user");
     Optional<User> user = userRepository.findById(userId);
     Optional<Publication> publication = publicationRepository.findById(publicationId);
@@ -57,5 +59,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         userId, publicationId, periodInMonths, LocalDate.now());
 
     log.info("Finished adding subscription to user");
+
+    return UserMapper.INSTANCE.mapUserToUserDto(
+        userRepository.findById(userId).orElseThrow(EntityIllegalArgumentException::new));
   }
 }

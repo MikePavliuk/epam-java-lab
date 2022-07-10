@@ -58,15 +58,13 @@ public class UserController implements UserApi {
   }
 
   @Override
-  public ResponseEntity<Void> addSubscriptionToUser(
-      long userId, long publicationId, int periodInMonths) {
+  public UserDto addSubscriptionToUser(long userId, long publicationId, int periodInMonths) {
     log.info(
         "Subscribe user with id '{}' to publication with id '{}' for {} month(s)",
         userId,
         publicationId,
         periodInMonths);
-    subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
-    return ResponseEntity.noContent().build();
+    return subscriptionService.addSubscriptionToUser(userId, publicationId, periodInMonths);
   }
 
   @Override

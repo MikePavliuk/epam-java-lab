@@ -3,7 +3,6 @@ package com.mykhailo_pavliuk.smart_cookie.controller;
 import com.mykhailo_pavliuk.smart_cookie.api.PublicationApi;
 import com.mykhailo_pavliuk.smart_cookie.dto.PublicationDto;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -47,11 +46,5 @@ public class PublicationController implements PublicationApi {
     log.info("Delete publication by id {}", id);
     publicationService.deleteById(id);
     return ResponseEntity.noContent().build();
-  }
-
-  @Override
-  public List<PublicationDto> getAllPublicationsByUserId(long userId) {
-    log.info("Get all publications of user with id {}", userId);
-    return publicationService.getPublicationsByUserId(userId);
   }
 }
