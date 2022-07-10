@@ -1,5 +1,6 @@
 package com.mykhailo_pavliuk.smart_cookie.model;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString.Exclude;
@@ -19,4 +20,6 @@ public class User {
   private UserStatus status;
 
   private Role role;
+
+  private List<Subscription> subscriptions;
 }

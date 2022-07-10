@@ -46,10 +46,4 @@ public class PublicationController implements PublicationApi {
     publicationService.deleteById(id);
     return ResponseEntity.noContent().build();
   }
-
-  @Override
-  public List<PublicationDto> getAllPublicationsByUserId(long userId) {
-    log.info("Get all publications of user with id {}", userId);
-    return publicationService.getPublicationsByUserId(userId);
-  }
 }

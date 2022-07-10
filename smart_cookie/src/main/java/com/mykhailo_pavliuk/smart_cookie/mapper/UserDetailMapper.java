@@ -9,7 +9,5 @@ import org.mapstruct.factory.Mappers;
 public interface UserDetailMapper {
   UserDetailMapper INSTANCE = Mappers.getMapper(UserDetailMapper.class);
 
-  UserDetailDto mapUserDetailToUserDetailDto(UserDetail userDetail);
-
   UserDetail mapUserDetailDtoToUserDetail(UserDetailDto userDetailDto);
 }

@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,7 +45,7 @@ public interface UserApi extends CrudApi<UserDto, Long> {
   @ApiOperation("Subscribe user to publication")
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{userId}/publications/{publicationId}")
-  ResponseEntity<Void> addSubscriptionToUser(
+  UserDto addSubscriptionToUser(
       @PathVariable long userId,
       @PathVariable long publicationId,
       @RequestParam @Positive int periodInMonths);
