@@ -8,7 +8,6 @@ import com.mykhailo_pavliuk.smart_cookie.model.PublicationInfo;
 import com.mykhailo_pavliuk.smart_cookie.repository.GenreRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.LanguageRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
-import com.mykhailo_pavliuk.smart_cookie.repository.SubscriptionRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -26,7 +25,6 @@ public class PublicationServiceImpl implements PublicationService {
   private final PublicationRepository publicationRepository;
   private final GenreRepository genreRepository;
   private final LanguageRepository languageRepository;
-  private final SubscriptionRepository subscriptionRepository;
 
   @Override
   public PublicationDto getById(Long id) {
