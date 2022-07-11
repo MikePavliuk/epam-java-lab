@@ -125,6 +125,27 @@ class SubscriptionServiceImplTests {
   }
 
   @Test
+  void givenUserWithNoUserDetails_whenAddSubscription_thenThrowEntityIllegalArgumentException() {
+    User user = UserTestDataUtil.createUser();
+    user.setUserDetail(null);
+    Publication publication = PublicationTestDataUtil.createPublication();
+
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(publicationRepository.findById(publication.getId())).thenReturn(Optional.of(publication));
+
+    assertThatExceptionOfType(EntityIllegalArgumentException.class)
+        .isThrownBy(
+            () -> subscriptionService.addSubscriptionToUser(user.getId(), publication.getId(), 3))
+        .withMessage("User is not allowed to have balance");
+
+    verify(publicationRepository, times(1)).findById(publication.getId());
+    verify(userRepository, times(0)).save(any());
+    verify(subscriptionRepository, times(0))
+        .subscribeUserToPublication(user.getId(), publication.getId(), 3, LocalDate.now());
+    verify(userRepository, times(1)).findById(user.getId());
+  }
+
+  @Test
   void givenUserWithNotEnoughMoney_whenAddSubscription_thenThrowEntityIllegalArgumentException() {
     User user = UserTestDataUtil.createUser();
     Publication publication = PublicationTestDataUtil.createPublication();
