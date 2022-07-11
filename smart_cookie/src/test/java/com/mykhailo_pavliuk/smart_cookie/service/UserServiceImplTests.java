@@ -147,7 +147,7 @@ class UserServiceImplTests {
   }
 
   @Test
-  void givenUserDto_whenCreate_thenReturnCreatedUser() {
+  void givenValidUserDto_whenCreate_thenReturnCreatedUserDto() {
     UserDto inputUserDto = UserTestDataUtil.creatUserDto();
     Role role = UserTestDataUtil.createSubscriberRole();
     UserStatus status = UserTestDataUtil.createActiveStatus();
@@ -182,6 +182,46 @@ class UserServiceImplTests {
 
     verify(roleRepository, times(1)).findByName(role.getName());
     verify(userStatusRepository, times(1)).findByName(status.getName());
+    verify(userRepository, times(1)).save(expectedConfiguredUser);
+  }
+
+  @Test
+  void givenUserDtoWithInvalidRole_whenCreate_thenThrowEntityNotFoundException() {
+    UserDto inputUserDto = UserTestDataUtil.creatUserDto();
+    Role role = UserTestDataUtil.createSubscriberRole();
+    role.setId(1000L);
+    UserStatus status = UserTestDataUtil.createActiveStatus();
+    User expectedConfiguredUser = UserTestDataUtil.createUser();
+
+    when(roleRepository.findByName(role.getName())).thenReturn(Optional.empty());
+
+    assertThatExceptionOfType(EntityNotFoundException.class)
+        .isThrownBy(() -> userService.create(inputUserDto))
+        .withMessage("Entity is not found");
+
+    verify(roleRepository, times(1)).findByName(role.getName());
+    verify(userStatusRepository, times(0)).findByName(status.getName());
+    verify(userRepository, times(0)).save(expectedConfiguredUser);
+  }
+
+  @Test
+  void givenUserDtoWithInvalidUserStatus_whenCreate_thenThrowEntityNotFoundException() {
+    UserDto inputUserDto = UserTestDataUtil.creatUserDto();
+    Role role = UserTestDataUtil.createSubscriberRole();
+    UserStatus status = UserTestDataUtil.createActiveStatus();
+    status.setId(1000L);
+    User expectedConfiguredUser = UserTestDataUtil.createUser();
+
+    when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));
+    when(userStatusRepository.findByName(status.getName())).thenReturn(Optional.empty());
+
+    assertThatExceptionOfType(EntityNotFoundException.class)
+        .isThrownBy(() -> userService.create(inputUserDto))
+        .withMessage("Entity is not found");
+
+    verify(roleRepository, times(1)).findByName(role.getName());
+    verify(userStatusRepository, times(1)).findByName(status.getName());
+    verify(userRepository, times(0)).save(expectedConfiguredUser);
   }
 
   @Test
