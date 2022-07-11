@@ -169,7 +169,7 @@ class PublicationServiceImplTests {
   }
 
   @Test
-  void givenPublicationDtoWithInvalidGenre_whenCreate_thenReturnThrowEntityNotFoundException() {
+  void givenPublicationDtoWithInvalidGenre_whenCreate_thenThrowEntityNotFoundException() {
     PublicationDto inputPublicationDto = PublicationTestDataUtil.createPublicationDto();
     Genre genre = PublicationTestDataUtil.GENRE;
     genre.setId(1000L);
@@ -188,7 +188,7 @@ class PublicationServiceImplTests {
   }
 
   @Test
-  void givenPublicationDtoWithInvalidLanguage_whenCreate_thenReturnThrowEntityNotFoundException() {
+  void givenPublicationDtoWithInvalidLanguage_whenCreate_thenThrowEntityNotFoundException() {
     PublicationDto inputPublicationDto = PublicationTestDataUtil.createPublicationDto();
     Genre genre = PublicationTestDataUtil.GENRE;
     Language language = PublicationTestDataUtil.PUBLICATION_INFO_LANGUAGE;
