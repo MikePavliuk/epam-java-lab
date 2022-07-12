@@ -1,8 +1,6 @@
 package com.epam.spring.homework2.beans;
 
-import com.epam.spring.homework2.Validatable;
-
-public abstract class AbstractBean implements Validatable {
+public abstract class AbstractBean {
   private String name;
   private int value;
 
@@ -10,6 +8,22 @@ public abstract class AbstractBean implements Validatable {
 
   public AbstractBean(String name, int value) {
     this.name = name;
+    this.value = value;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getValue() {
+    return value;
+  }
+
+  public void setValue(int value) {
     this.value = value;
   }
 
@@ -24,16 +38,5 @@ public abstract class AbstractBean implements Validatable {
         + value
         + '\''
         + '}';
-  }
-
-  @Override
-  public void validate() {
-    if (name == null) {
-      name = "Not assigned yet";
-    }
-
-    if (value <= 0) {
-      value = 1;
-    }
   }
 }
