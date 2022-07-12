@@ -5,7 +5,6 @@ import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.mapper.PublicationMapper;
 import com.mykhailo_pavliuk.smart_cookie.model.Publication;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
-import com.mykhailo_pavliuk.smart_cookie.repository.SubscriptionRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 public class PublicationServiceImpl implements PublicationService {
 
   private final PublicationRepository publicationRepository;
-  private final SubscriptionRepository subscriptionRepository;
 
   public PublicationDto getById(Long id) {
     log.info("Started getting publication by id");
