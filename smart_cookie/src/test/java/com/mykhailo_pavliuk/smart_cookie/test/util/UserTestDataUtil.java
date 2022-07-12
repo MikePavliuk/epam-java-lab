@@ -53,4 +53,13 @@ public class UserTestDataUtil {
   public static UserStatus createActiveStatus() {
     return UserStatus.builder().id(1L).name(UserStatusDto.ACTIVE.name().toLowerCase()).build();
   }
+
+  public static UserDto createValidUserDto() {
+    UserDto user = creatUserDto();
+    user.getUserDetail().setId(1L);
+    user.setRole(createSubscriberRole());
+    user.setStatus(createActiveStatus());
+
+    return user;
+  }
 }
