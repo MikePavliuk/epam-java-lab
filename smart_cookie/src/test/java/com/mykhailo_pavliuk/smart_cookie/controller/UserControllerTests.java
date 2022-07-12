@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDetailDto;
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
-import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
 import com.mykhailo_pavliuk.smart_cookie.model.enums.ErrorType;
 import com.mykhailo_pavliuk.smart_cookie.service.SubscriptionService;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
@@ -60,22 +59,6 @@ class UserControllerTests {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.id").value(UserTestDataUtil.ID));
-  }
-
-  @Test
-  void givenNotExistingUserId_whenGetById_thenReturnValidationErrorJson() throws Exception {
-    UserDto userDto = UserTestDataUtil.creatUserDto();
-
-    when(userService.getById(userDto.getId())).thenThrow(EntityNotFoundException.class);
-
-    mockMvc
-        .perform(get("/api/v1/users/" + UserTestDataUtil.ID))
-        .andDo(print())
-        .andExpect(status().is5xxServerError())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.errorType").value(ErrorType.VALIDATION_ERROR_TYPE.name()));
-
-    verify(userService, times(1)).getById(UserTestDataUtil.ID);
   }
 
   @Test
