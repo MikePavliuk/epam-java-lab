@@ -1,4 +1,4 @@
-package com.mykhailo_pavliuk.smart_cookie.service;
+package com.mykhailo_pavliuk.smart_cookie.service.impl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,7 +24,6 @@ import com.mykhailo_pavliuk.smart_cookie.model.Publication;
 import com.mykhailo_pavliuk.smart_cookie.repository.GenreRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.LanguageRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
-import com.mykhailo_pavliuk.smart_cookie.service.impl.PublicationServiceImpl;
 import com.mykhailo_pavliuk.smart_cookie.test.util.PublicationTestDataUtil;
 import java.util.Arrays;
 import java.util.List;
