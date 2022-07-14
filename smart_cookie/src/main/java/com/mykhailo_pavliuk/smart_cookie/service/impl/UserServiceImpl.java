@@ -14,7 +14,6 @@ import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.UserStatusRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import java.math.BigDecimal;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +38,13 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto getById(Long id) {
     log.info("Started getting user by id");
-    Optional<User> user = userRepository.findById(id);
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(getMessageUserIsNotFoundById(id)));
     log.info("Finished getting user by id ({})", user);
 
-    return UserMapper.INSTANCE.mapUserToUserDto(
-        user.orElseThrow(() -> new EntityNotFoundException(getMessageUserIsNotFoundById(id))));
+    return UserMapper.INSTANCE.mapUserToUserDto(user);
   }
 
   @Override
@@ -117,32 +118,36 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto getByEmail(String email) {
     log.info("Started getting user by email");
-    Optional<User> user = userRepository.findByEmail(email);
+    User user =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format("User with email '%s' is not found!", email)));
     log.info("Finished getting user by email ({})", user);
 
-    return UserMapper.INSTANCE.mapUserToUserDto(
-        user.orElseThrow(
-            () ->
-                new EntityNotFoundException(
-                    String.format("User with email '%s' is not found!", email))));
+    return UserMapper.INSTANCE.mapUserToUserDto(user);
   }
 
   @Transactional
   @Override
   public UserDto addFunds(long id, BigDecimal amount) {
     log.info("Started adding funds");
-    Optional<User> user = userRepository.findById(id);
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(getMessageUserIsNotFoundById(id)));
 
-    if (user.isEmpty()) {
-      throw new EntityNotFoundException(getMessageUserIsNotFoundById(id));
+    if (user.getUserDetail() == null) {
+      throw new EntityIllegalArgumentException(
+          String.format(
+              "User is not allowed to have balance! User's role is '%s'.",
+              user.getRole().getName()));
     }
 
-    if (user.get().getUserDetail() == null) {
-      throw new EntityIllegalArgumentException("User is not allowed to have balance!");
-    }
-
-    user.get().getUserDetail().setBalance(user.get().getUserDetail().getBalance().add(amount));
-    User updatedUser = userRepository.save(user.get());
+    user.getUserDetail().setBalance(user.getUserDetail().getBalance().add(amount));
+    User updatedUser = userRepository.save(user);
 
     log.info("Finished adding funds");
 
