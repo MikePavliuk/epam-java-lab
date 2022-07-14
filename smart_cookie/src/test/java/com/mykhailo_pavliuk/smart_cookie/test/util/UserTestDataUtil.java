@@ -18,8 +18,12 @@ public class UserTestDataUtil {
   public static final Long ID = 1L;
   public static final String FIRST_NAME = "Mykhailo";
   public static final String LAST_NAME = "Pavliuk";
+  public static final BigDecimal BALANCE = BigDecimal.ZERO;
   public static final String EMAIL = "mike@gmail.com";
   public static final String PASSWORD = "Mike12345!";
+
+  public static final UserStatus USER_STATUS = createActiveStatus();
+  public static final Role ROLE = createSubscriberRole();
 
   public static User createUser() {
     return User.builder()
@@ -32,8 +36,8 @@ public class UserTestDataUtil {
                 .lastName(LAST_NAME)
                 .balance(BigDecimal.ZERO)
                 .build())
-        .role(Role.builder().name(RoleDto.SUBSCRIBER.name().toLowerCase()).build())
-        .status(UserStatus.builder().name(UserStatusDto.ACTIVE.name().toLowerCase()).build())
+        .role(ROLE)
+        .status(USER_STATUS)
         .build();
   }
 
@@ -46,11 +50,11 @@ public class UserTestDataUtil {
         .build();
   }
 
-  public static Role createSubscriberRole() {
+  private static Role createSubscriberRole() {
     return Role.builder().id(1L).name(RoleDto.SUBSCRIBER.name().toLowerCase()).build();
   }
 
-  public static UserStatus createActiveStatus() {
+  private static UserStatus createActiveStatus() {
     return UserStatus.builder().id(1L).name(UserStatusDto.ACTIVE.name().toLowerCase()).build();
   }
 
