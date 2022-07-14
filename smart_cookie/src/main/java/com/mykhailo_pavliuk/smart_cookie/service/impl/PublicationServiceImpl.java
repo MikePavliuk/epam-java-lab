@@ -33,7 +33,8 @@ public class PublicationServiceImpl implements PublicationService {
     log.info("Finished getting publication by id ({})", publication);
 
     return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
-        publication.orElseThrow(EntityNotFoundException::new));
+        publication.orElseThrow(
+            () -> new EntityNotFoundException(getMessagePublicationIsNotFoundById(id))));
   }
 
   @Override
@@ -51,8 +52,12 @@ public class PublicationServiceImpl implements PublicationService {
 
     publicationDto.setGenre(
         genreRepository
-            .findByName(publicationDto.getGenre().getName().toLowerCase())
-            .orElseThrow(EntityNotFoundException::new));
+            .findByName(publicationDto.getGenre().getName())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format(
+                            "Genre '%s' is not found!", publicationDto.getGenre().getName()))));
 
     publicationDto
         .getPublicationInfos()
@@ -61,7 +66,12 @@ public class PublicationServiceImpl implements PublicationService {
                 publicationInfoDto.setLanguage(
                     languageRepository
                         .findByName(publicationInfoDto.getLanguage().getName())
-                        .orElseThrow(EntityNotFoundException::new)));
+                        .orElseThrow(
+                            () ->
+                                new EntityNotFoundException(
+                                    String.format(
+                                        "Language '%s' is not found!",
+                                        publicationInfoDto.getLanguage().getName())))));
 
     Publication publication =
         PublicationMapper.INSTANCE.mapPublicationDtoToPublication(publicationDto);
@@ -83,7 +93,7 @@ public class PublicationServiceImpl implements PublicationService {
     log.info("Started updating publication by id");
 
     if (!publicationRepository.existsById(id)) {
-      throw new EntityNotFoundException("Publication with id " + id + " is not found");
+      throw new EntityNotFoundException(getMessagePublicationIsNotFoundById(id));
     }
 
     Publication publication =
@@ -105,5 +115,9 @@ public class PublicationServiceImpl implements PublicationService {
     log.info("Started deleting publication by id");
     publicationRepository.deleteById(id);
     log.info("Finished deleting publication by id");
+  }
+
+  private String getMessagePublicationIsNotFoundById(long id) {
+    return String.format("Publication with id '%d' is not found!", id);
   }
 }

@@ -70,7 +70,7 @@ class PublicationServiceImplTests {
 
     assertThatExceptionOfType(EntityNotFoundException.class)
         .isThrownBy(() -> publicationService.getById(PublicationTestDataUtil.ID))
-        .withMessage("Entity is not found");
+        .withMessage("Publication with id '" + PublicationTestDataUtil.ID + "' is not found!");
 
     verify(publicationRepository, times(1)).findById(PublicationTestDataUtil.ID);
   }
@@ -170,7 +170,7 @@ class PublicationServiceImplTests {
 
     assertThatExceptionOfType(EntityNotFoundException.class)
         .isThrownBy(() -> publicationService.create(inputPublicationDto))
-        .withMessage("Entity is not found");
+        .withMessage("Genre '" + PublicationTestDataUtil.GENRE.getName() + "' is not found!");
 
     verify(genreRepository, times(1)).findByName(PublicationTestDataUtil.GENRE.getName());
     verify(languageRepository, times(0))
@@ -190,7 +190,10 @@ class PublicationServiceImplTests {
 
     assertThatExceptionOfType(EntityNotFoundException.class)
         .isThrownBy(() -> publicationService.create(inputPublicationDto))
-        .withMessage("Entity is not found");
+        .withMessage(
+            "Language '"
+                + PublicationTestDataUtil.PUBLICATION_INFO_LANGUAGE.getName()
+                + "' is not found!");
 
     verify(genreRepository, times(1)).findByName(PublicationTestDataUtil.GENRE.getName());
     verify(languageRepository, times(1))
@@ -224,7 +227,7 @@ class PublicationServiceImplTests {
 
     assertThatExceptionOfType(EntityNotFoundException.class)
         .isThrownBy(() -> publicationService.updateById(PublicationTestDataUtil.ID, publicationDto))
-        .withMessage("Publication with id " + PublicationTestDataUtil.ID + " is not found");
+        .withMessage("Publication with id '" + PublicationTestDataUtil.ID + "' is not found!");
 
     verify(publicationRepository, times(1)).existsById(PublicationTestDataUtil.ID);
     verify(publicationRepository, times(0)).save(any());
