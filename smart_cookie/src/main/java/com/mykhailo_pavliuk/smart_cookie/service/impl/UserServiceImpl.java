@@ -55,10 +55,9 @@ public class UserServiceImpl implements UserService {
   public UserDto create(UserDto userDto) {
     log.info("Started creating user");
 
-    userDto.setRole(Role.builder().id(1L).name(RoleDto.SUBSCRIBER.name().toLowerCase()).build());
+    userDto.setRole(Role.builder().id(1L).name(DEFAULT_CREATED_USER_ROLE_NAME).build());
 
-    userDto.setStatus(
-        UserStatus.builder().id(1L).name(UserStatusDto.ACTIVE.name().toLowerCase()).build());
+    userDto.setStatus(UserStatus.builder().id(1L).name(DEFAULT_CREATED_USER_STATUS_NAME).build());
 
     User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
 

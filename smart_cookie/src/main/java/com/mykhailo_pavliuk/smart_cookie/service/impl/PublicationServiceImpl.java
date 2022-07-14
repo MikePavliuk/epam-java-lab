@@ -20,6 +20,7 @@ public class PublicationServiceImpl implements PublicationService {
   private final PublicationRepository publicationRepository;
 
   public PublicationDto getById(Long id) {
+    log.info("Started getting publication by id");
     Publication publication =
         publicationRepository
             .findById(id)
