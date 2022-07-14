@@ -14,7 +14,6 @@ import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +24,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+  private static final String DEFAULT_CREATED_USER_ROLE_NAME =
+      RoleDto.SUBSCRIBER.name().toLowerCase();
+  private static final String DEFAULT_CREATED_USER_STATUS_NAME =
+      UserStatusDto.ACTIVE.name().toLowerCase();
+
   private final UserRepository userRepository;
 
   @Override
   public UserDto getById(Long id) {
     log.info("Started getting user by id");
-    Optional<User> user = userRepository.findById(id);
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(getMessageUserIsNotFoundById(id)));
     log.info("Finished getting user by id ({})", user);
 
-    return UserMapper.INSTANCE.mapUserToUserDto(user.orElseThrow(EntityNotFoundException::new));
+    return UserMapper.INSTANCE.mapUserToUserDto(user);
   }
 
   @Override
@@ -48,10 +55,9 @@ public class UserServiceImpl implements UserService {
   public UserDto create(UserDto userDto) {
     log.info("Started creating user");
 
-    userDto.setRole(Role.builder().id(1L).name(RoleDto.SUBSCRIBER.name().toLowerCase()).build());
+    userDto.setRole(Role.builder().id(1L).name(DEFAULT_CREATED_USER_ROLE_NAME).build());
 
-    userDto.setStatus(
-        UserStatus.builder().id(1L).name(UserStatusDto.ACTIVE.name().toLowerCase()).build());
+    userDto.setStatus(UserStatus.builder().id(1L).name(DEFAULT_CREATED_USER_STATUS_NAME).build());
 
     User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
 
@@ -71,7 +77,7 @@ public class UserServiceImpl implements UserService {
     log.info("Started updating user by id");
 
     if (!userRepository.existsById(id)) {
-      throw new EntityNotFoundException("User with id " + id + " is not found");
+      throw new EntityNotFoundException(getMessageUserIsNotFoundById(id));
     }
 
     User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
@@ -94,27 +100,35 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto getByEmail(String email) {
     log.info("Started getting user by email");
-    Optional<User> user = userRepository.findByEmail(email);
+    User user =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format("User with email '%s' is not found!", email)));
     log.info("Finished getting user by email ({})", user);
 
-    return UserMapper.INSTANCE.mapUserToUserDto(user.orElseThrow(EntityNotFoundException::new));
+    return UserMapper.INSTANCE.mapUserToUserDto(user);
   }
 
   @Override
   public UserDto addFunds(long id, BigDecimal amount) {
     log.info("Started adding funds");
-    Optional<User> user = userRepository.findById(id);
+    User user =
+        userRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(getMessageUserIsNotFoundById(id)));
 
-    if (user.isEmpty()) {
-      throw new EntityNotFoundException();
+    if (user.getUserDetail() == null) {
+      throw new EntityIllegalArgumentException(
+          String.format(
+              "User is not allowed to have balance! User's role is '%s'.",
+              user.getRole().getName()));
     }
 
-    if (user.get().getUserDetail() == null) {
-      throw new EntityIllegalArgumentException("User is not allowed to have balance");
-    }
-
-    user.get().getUserDetail().setBalance(user.get().getUserDetail().getBalance().add(amount));
-    User updatedUser = userRepository.save(user.get());
+    user.getUserDetail().setBalance(user.getUserDetail().getBalance().add(amount));
+    User updatedUser = userRepository.save(user);
 
     log.info("Finished adding funds");
 
@@ -125,5 +139,9 @@ public class UserServiceImpl implements UserService {
   public boolean existsByEmail(String email) {
     log.info("Checking if exists by email");
     return userRepository.existsByEmail(email);
+  }
+
+  private String getMessageUserIsNotFoundById(long id) {
+    return String.format("User with id '%d' is not found!", id);
   }
 }
