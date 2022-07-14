@@ -4,18 +4,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.mykhailo_pavliuk.smart_cookie.dto.SubscriptionDto;
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
 import com.mykhailo_pavliuk.smart_cookie.exception.EntityIllegalArgumentException;
 import com.mykhailo_pavliuk.smart_cookie.exception.EntityNotFoundException;
-import com.mykhailo_pavliuk.smart_cookie.mapper.UserMapper;
-import com.mykhailo_pavliuk.smart_cookie.model.Publication;
-import com.mykhailo_pavliuk.smart_cookie.model.Subscription;
+import com.mykhailo_pavliuk.smart_cookie.model.Role;
 import com.mykhailo_pavliuk.smart_cookie.model.User;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.SubscriptionRepository;
@@ -23,8 +19,6 @@ import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.test.util.PublicationTestDataUtil;
 import com.mykhailo_pavliuk.smart_cookie.test.util.UserTestDataUtil;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,137 +36,187 @@ class SubscriptionServiceImplTests {
   @Mock private PublicationRepository publicationRepository;
 
   @Test
-  void givenExistingIdsAndUserWithEnoughMoney_whenAddSubscription_thenReturnUserWithSubscription() {
-    User user = UserTestDataUtil.createUser();
-    user.getUserDetail().setBalance(BigDecimal.valueOf(100));
-    Publication publication = PublicationTestDataUtil.createPublication();
-    int periodInMonths = 3;
-    LocalDate startDate = LocalDate.now();
+  void givenValidParameters_whenAddSubscription_thenReturnUserWithSubscription() {
+    User userWithoutSubscription = UserTestDataUtil.createUser();
+    userWithoutSubscription.getUserDetail().setBalance(BigDecimal.valueOf(100));
+    User userWithSubscription = UserTestDataUtil.createUserWithSubscription();
+    UserDto userDtoWithSubscription = UserTestDataUtil.createUserDtoWithSubscription();
 
-    UserDto userDtoWithSubscription = UserMapper.INSTANCE.mapUserToUserDto(user);
-    userDtoWithSubscription.setSubscriptions(
-        Collections.singletonList(
-            SubscriptionDto.builder()
-                .userId(user.getId())
-                .publicationId(publication.getId())
-                .periodInMonths(periodInMonths)
-                .startDate(startDate)
-                .build()));
-    userDtoWithSubscription
-        .getUserDetail()
-        .setBalance(
-            user.getUserDetail()
-                .getBalance()
-                .subtract(
-                    publication.getPricePerMonth().multiply(BigDecimal.valueOf(periodInMonths))));
-    User userWithSubscriptions = UserMapper.INSTANCE.mapUserDtoToUser(userDtoWithSubscription);
-    userWithSubscriptions.setSubscriptions(
-        Collections.singletonList(
-            Subscription.builder()
-                .user(user)
-                .publication(publication)
-                .periodInMonths(periodInMonths)
-                .startDate(startDate)
-                .build()));
-
-    when(userRepository.findById(user.getId()))
-        .thenReturn(Optional.of(user))
-        .thenReturn(Optional.of(userWithSubscriptions));
-    when(publicationRepository.findById(publication.getId())).thenReturn(Optional.of(publication));
+    when(userRepository.findById(UserTestDataUtil.ID))
+        .thenReturn(Optional.of(userWithoutSubscription))
+        .thenReturn(Optional.of(userWithSubscription));
+    when(publicationRepository.findById(PublicationTestDataUtil.ID))
+        .thenReturn(Optional.of(PublicationTestDataUtil.createPublication()));
+    when(userRepository.save(userWithoutSubscription)).thenReturn(userWithoutSubscription);
 
     UserDto resultUserDto =
         subscriptionService.addSubscriptionToUser(
-            user.getId(), publication.getId(), periodInMonths);
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS);
 
     assertThat(resultUserDto, is(userDtoWithSubscription));
 
-    verify(publicationRepository, times(1)).findById(publication.getId());
-    verify(userRepository, times(1)).save(user);
+    verify(publicationRepository, times(1)).findById(PublicationTestDataUtil.ID);
+    verify(userRepository, times(1)).save(userWithSubscription);
     verify(subscriptionRepository, times(1))
-        .subscribeUserToPublication(user.getId(), publication.getId(), periodInMonths, startDate);
-    verify(userRepository, times(2)).findById(user.getId());
+        .subscribeUserToPublication(
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS,
+            UserTestDataUtil.SUBSCRIPTION_START_DATE);
+    verify(userRepository, times(2)).findById(UserTestDataUtil.ID);
   }
 
   @Test
   void givenNotExistingUserId_whenAddSubscription_thenThrowEntityNotFoundException() {
-    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+    when(userRepository.findById(UserTestDataUtil.ID)).thenReturn(Optional.empty());
 
     assertThatExceptionOfType(EntityNotFoundException.class)
-        .isThrownBy(() -> subscriptionService.addSubscriptionToUser(1000L, 1L, 3))
-        .withMessage("Entity is not found");
+        .isThrownBy(
+            () ->
+                subscriptionService.addSubscriptionToUser(
+                    UserTestDataUtil.ID,
+                    PublicationTestDataUtil.ID,
+                    UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS))
+        .withMessage("User with id '" + UserTestDataUtil.ID + "' is not found!");
 
-    verify(publicationRepository, times(1)).findById(1L);
+    verify(publicationRepository, times(0)).findById(PublicationTestDataUtil.ID);
     verify(userRepository, times(0)).save(any());
     verify(subscriptionRepository, times(0))
-        .subscribeUserToPublication(1000L, 1L, 3, LocalDate.now());
-    verify(userRepository, times(1)).findById(1000L);
+        .subscribeUserToPublication(
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS,
+            UserTestDataUtil.SUBSCRIPTION_START_DATE);
+    verify(userRepository, times(1)).findById(UserTestDataUtil.ID);
   }
 
   @Test
   void givenNotExistingPublicationId_whenAddSubscription_thenThrowEntityNotFoundException() {
-    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+    when(userRepository.findById(UserTestDataUtil.ID))
+        .thenReturn(Optional.of(UserTestDataUtil.createUser()));
+    when(publicationRepository.findById(PublicationTestDataUtil.ID)).thenReturn(Optional.empty());
 
     assertThatExceptionOfType(EntityNotFoundException.class)
-        .isThrownBy(() -> subscriptionService.addSubscriptionToUser(1L, 1000L, 3))
-        .withMessage("Entity is not found");
+        .isThrownBy(
+            () ->
+                subscriptionService.addSubscriptionToUser(
+                    UserTestDataUtil.ID,
+                    PublicationTestDataUtil.ID,
+                    UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS))
+        .withMessage("Publication with id '" + PublicationTestDataUtil.ID + "' is not found!");
 
-    verify(publicationRepository, times(1)).findById(1000L);
+    verify(publicationRepository, times(1)).findById(PublicationTestDataUtil.ID);
     verify(userRepository, times(0)).save(any());
     verify(subscriptionRepository, times(0))
-        .subscribeUserToPublication(1L, 1000L, 3, LocalDate.now());
-    verify(userRepository, times(1)).findById(1L);
+        .subscribeUserToPublication(
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS,
+            UserTestDataUtil.SUBSCRIPTION_START_DATE);
+    verify(userRepository, times(1)).findById(PublicationTestDataUtil.ID);
   }
 
   @Test
   void givenUserWithNoUserDetails_whenAddSubscription_thenThrowEntityIllegalArgumentException() {
     User user = UserTestDataUtil.createUser();
+    user.setRole(Role.builder().id(2L).name("admin").build());
     user.setUserDetail(null);
-    Publication publication = PublicationTestDataUtil.createPublication();
 
-    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-    when(publicationRepository.findById(publication.getId())).thenReturn(Optional.of(publication));
-
-    assertThatExceptionOfType(EntityIllegalArgumentException.class)
-        .isThrownBy(
-            () -> subscriptionService.addSubscriptionToUser(user.getId(), publication.getId(), 3))
-        .withMessage(
-            String.format(
-                "User is not allowed to have balance! User's role is '%s'.",
-                user.getRole().getName()));
-
-    verify(publicationRepository, times(1)).findById(publication.getId());
-    verify(userRepository, times(0)).save(any());
-    verify(subscriptionRepository, times(0))
-        .subscribeUserToPublication(user.getId(), publication.getId(), 3, LocalDate.now());
-    verify(userRepository, times(1)).findById(user.getId());
-  }
-
-  @Test
-  void givenUserWithNotEnoughMoney_whenAddSubscription_thenThrowEntityIllegalArgumentException() {
-    User user = UserTestDataUtil.createUser();
-    Publication publication = PublicationTestDataUtil.createPublication();
-    int periodInMonths = 3;
-    LocalDate startDate = LocalDate.now();
-    BigDecimal fullPrice =
-        publication.getPricePerMonth().multiply(BigDecimal.valueOf(periodInMonths));
-
-    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
-    when(publicationRepository.findById(publication.getId())).thenReturn(Optional.of(publication));
+    when(userRepository.findById(UserTestDataUtil.ID)).thenReturn(Optional.of(user));
+    when(publicationRepository.findById(PublicationTestDataUtil.ID))
+        .thenReturn(Optional.of(PublicationTestDataUtil.createPublication()));
 
     assertThatExceptionOfType(EntityIllegalArgumentException.class)
         .isThrownBy(
             () ->
                 subscriptionService.addSubscriptionToUser(
-                    user.getId(), publication.getId(), periodInMonths))
+                    UserTestDataUtil.ID,
+                    PublicationTestDataUtil.ID,
+                    UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS))
+        .withMessage(
+            String.format(
+                "User is not allowed to have balance! User's role is '%s'.",
+                user.getRole().getName()));
+
+    verify(publicationRepository, times(1)).findById(PublicationTestDataUtil.ID);
+    verify(userRepository, times(0)).save(any());
+    verify(subscriptionRepository, times(0))
+        .subscribeUserToPublication(
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS,
+            UserTestDataUtil.SUBSCRIPTION_START_DATE);
+    verify(userRepository, times(1)).findById(UserTestDataUtil.ID);
+  }
+
+  @Test
+  void givenUserWithNotEnoughMoney_whenAddSubscription_thenThrowEntityIllegalArgumentException() {
+    User userWithoutSubscription = UserTestDataUtil.createUser();
+    User userWithSubscription = UserTestDataUtil.createUserWithSubscription();
+
+    when(userRepository.findById(UserTestDataUtil.ID))
+        .thenReturn(Optional.of(userWithoutSubscription))
+        .thenReturn(Optional.of(userWithSubscription));
+    when(publicationRepository.findById(PublicationTestDataUtil.ID))
+        .thenReturn(Optional.of(PublicationTestDataUtil.createPublication()));
+
+    assertThatExceptionOfType(EntityIllegalArgumentException.class)
+        .isThrownBy(
+            () ->
+                subscriptionService.addSubscriptionToUser(
+                    UserTestDataUtil.ID,
+                    PublicationTestDataUtil.ID,
+                    UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS))
         .withMessage(
             "User has not enough money to make a transaction! "
-                + fullPrice.subtract(user.getUserDetail().getBalance())
+                + PublicationTestDataUtil.PRICE_PER_MONTH.multiply(
+                    BigDecimal.valueOf(UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS))
                 + "$ is missing!");
 
-    verify(publicationRepository, times(1)).findById(publication.getId());
-    verify(userRepository, times(0)).save(user);
+    verify(publicationRepository, times(1)).findById(PublicationTestDataUtil.ID);
+    verify(userRepository, times(0)).save(any());
     verify(subscriptionRepository, times(0))
-        .subscribeUserToPublication(user.getId(), publication.getId(), periodInMonths, startDate);
-    verify(userRepository, times(1)).findById(user.getId());
+        .subscribeUserToPublication(
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS,
+            UserTestDataUtil.SUBSCRIPTION_START_DATE);
+    verify(userRepository, times(1)).findById(UserTestDataUtil.ID);
+  }
+
+  @Test
+  void givenValidUserButCantGetAfterSave_whenAddSubscription_thenThrowEntityNotFoundException() {
+    User userWithoutSubscription = UserTestDataUtil.createUser();
+    userWithoutSubscription.getUserDetail().setBalance(BigDecimal.valueOf(100));
+    User userWithSubscription = UserTestDataUtil.createUserWithSubscription();
+
+    when(userRepository.findById(UserTestDataUtil.ID))
+        .thenReturn(Optional.of(userWithoutSubscription))
+        .thenReturn(Optional.empty());
+    when(publicationRepository.findById(PublicationTestDataUtil.ID))
+        .thenReturn(Optional.of(PublicationTestDataUtil.createPublication()));
+    when(userRepository.save(userWithoutSubscription)).thenReturn(userWithoutSubscription);
+
+    assertThatExceptionOfType(EntityNotFoundException.class)
+        .isThrownBy(
+            () ->
+                subscriptionService.addSubscriptionToUser(
+                    UserTestDataUtil.ID,
+                    PublicationTestDataUtil.ID,
+                    UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS))
+        .withMessage(
+            "Can't find user with id '" + UserTestDataUtil.ID + "' after correct subscription!");
+
+    verify(publicationRepository, times(1)).findById(PublicationTestDataUtil.ID);
+    verify(userRepository, times(1)).save(userWithSubscription);
+    verify(subscriptionRepository, times(1))
+        .subscribeUserToPublication(
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS,
+            UserTestDataUtil.SUBSCRIPTION_START_DATE);
+    verify(userRepository, times(2)).findById(UserTestDataUtil.ID);
   }
 }
