@@ -75,8 +75,8 @@ class PublicationControllerTests {
     mockMvc
         .perform(
             get("/api/v1/publications")
-                .param("page", String.valueOf(page))
-                .param("size", String.valueOf(size)))
+                .queryParam("page", String.valueOf(page))
+                .queryParam("size", String.valueOf(size)))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))

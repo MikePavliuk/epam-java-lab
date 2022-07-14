@@ -76,8 +76,8 @@ class UserControllerTests {
     mockMvc
         .perform(
             get("/api/v1/users")
-                .param("page", String.valueOf(page))
-                .param("size", String.valueOf(size)))
+                .queryParam("page", String.valueOf(page))
+                .queryParam("size", String.valueOf(size)))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -106,7 +106,7 @@ class UserControllerTests {
         .andDo(print())
         .andExpect(status().isCreated())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.id").value(returnedUser.getId()));
+        .andExpect(jsonPath("$.id").value(UserTestDataUtil.ID));
 
     verify(userService, times(1)).create(inputUser);
   }
@@ -149,7 +149,7 @@ class UserControllerTests {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.id").value(inputUser.getId()));
+        .andExpect(jsonPath("$.id").value(UserTestDataUtil.ID));
 
     verify(userService, times(1)).updateById(UserTestDataUtil.ID, inputUser);
   }
@@ -187,7 +187,9 @@ class UserControllerTests {
     UserDto userDto = UserTestDataUtil.createValidUserDto();
 
     when(subscriptionService.addSubscriptionToUser(
-            UserTestDataUtil.ID, PublicationTestDataUtil.ID, 1))
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS))
         .thenReturn(userDto);
 
     mockMvc
@@ -196,14 +198,19 @@ class UserControllerTests {
                     + UserTestDataUtil.ID
                     + "/publications/"
                     + PublicationTestDataUtil.ID)
-                .param("periodInMonths", String.valueOf(1)))
+                .queryParam(
+                    "periodInMonths",
+                    String.valueOf(UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS)))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.id").value(UserTestDataUtil.ID));
 
     verify(subscriptionService, times(1))
-        .addSubscriptionToUser(UserTestDataUtil.ID, PublicationTestDataUtil.ID, 1);
+        .addSubscriptionToUser(
+            UserTestDataUtil.ID,
+            PublicationTestDataUtil.ID,
+            UserTestDataUtil.SUBSCRIPTION_PERIOD_IN_MONTHS);
   }
 
   @Test
@@ -216,7 +223,7 @@ class UserControllerTests {
     mockMvc
         .perform(
             patch("/api/v1/users/" + UserTestDataUtil.ID + "/add-funds")
-                .param("amount", String.valueOf(amount)))
+                .queryParam("amount", String.valueOf(amount)))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
