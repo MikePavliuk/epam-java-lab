@@ -15,11 +15,10 @@ import lombok.NoArgsConstructor;
 public class PublicationTestDataUtil {
 
   public static final Long ID = 1L;
-  public static final Genre GENRE = Genre.builder().id(1L).name("fiction").build();
+  public static final Genre GENRE = createFictionGenre();
   public static final BigDecimal PRICE_PER_MONTH = BigDecimal.valueOf(10.99);
   public static final Long PUBLICATION_INFO_ID = 1L;
-  public static final Language PUBLICATION_INFO_LANGUAGE =
-      Language.builder().id(1L).name("english").build();
+  public static final Language PUBLICATION_INFO_LANGUAGE = createEnglishLanguage();
   public static final String PUBLICATION_INFO_TITLE = "Publication title";
   public static final String PUBLICATION_INFO_DESCRIPTION = "Publication description";
 
@@ -41,6 +40,14 @@ public class PublicationTestDataUtil {
               }
             })
         .build();
+  }
+
+  private static Genre createFictionGenre() {
+    return Genre.builder().id(1L).name("fiction").build();
+  }
+
+  private static Language createEnglishLanguage() {
+    return Language.builder().id(1L).name("english").build();
   }
 
   public static PublicationDto createPublicationDto() {
