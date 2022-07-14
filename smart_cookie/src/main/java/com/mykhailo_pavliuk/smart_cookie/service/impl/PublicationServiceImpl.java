@@ -9,7 +9,6 @@ import com.mykhailo_pavliuk.smart_cookie.repository.GenreRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.LanguageRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +28,14 @@ public class PublicationServiceImpl implements PublicationService {
   @Override
   public PublicationDto getById(Long id) {
     log.info("Started getting publication by id");
-    Optional<Publication> publication = publicationRepository.findById(id);
+    Publication publication =
+        publicationRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new EntityNotFoundException(getMessagePublicationIsNotFoundById(id)));
     log.info("Finished getting publication by id ({})", publication);
 
-    return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
-        publication.orElseThrow(
-            () -> new EntityNotFoundException(getMessagePublicationIsNotFoundById(id))));
+    return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
   }
 
   @Override
