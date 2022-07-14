@@ -9,7 +9,6 @@ import com.mykhailo_pavliuk.smart_cookie.repository.GenreRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.LanguageRepository;
 import com.mykhailo_pavliuk.smart_cookie.repository.PublicationRepository;
 import com.mykhailo_pavliuk.smart_cookie.service.PublicationService;
-import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +28,14 @@ public class PublicationServiceImpl implements PublicationService {
   @Override
   public PublicationDto getById(Long id) {
     log.info("Started getting publication by id");
-    Optional<Publication> publication = publicationRepository.findById(id);
+    Publication publication =
+        publicationRepository
+            .findById(id)
+            .orElseThrow(
+                () -> new EntityNotFoundException(getMessagePublicationIsNotFoundById(id)));
     log.info("Finished getting publication by id ({})", publication);
 
-    return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(
-        publication.orElseThrow(EntityNotFoundException::new));
+    return PublicationMapper.INSTANCE.mapPublicationToPublicationDto(publication);
   }
 
   @Override
@@ -51,8 +53,12 @@ public class PublicationServiceImpl implements PublicationService {
 
     publicationDto.setGenre(
         genreRepository
-            .findByName(publicationDto.getGenre().getName().toLowerCase())
-            .orElseThrow(EntityNotFoundException::new));
+            .findByName(publicationDto.getGenre().getName())
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format(
+                            "Genre '%s' is not found!", publicationDto.getGenre().getName()))));
 
     publicationDto
         .getPublicationInfos()
@@ -61,7 +67,12 @@ public class PublicationServiceImpl implements PublicationService {
                 publicationInfoDto.setLanguage(
                     languageRepository
                         .findByName(publicationInfoDto.getLanguage().getName())
-                        .orElseThrow(EntityNotFoundException::new)));
+                        .orElseThrow(
+                            () ->
+                                new EntityNotFoundException(
+                                    String.format(
+                                        "Language '%s' is not found!",
+                                        publicationInfoDto.getLanguage().getName())))));
 
     Publication publication =
         PublicationMapper.INSTANCE.mapPublicationDtoToPublication(publicationDto);
@@ -83,7 +94,7 @@ public class PublicationServiceImpl implements PublicationService {
     log.info("Started updating publication by id");
 
     if (!publicationRepository.existsById(id)) {
-      throw new EntityNotFoundException("Publication with id " + id + " is not found");
+      throw new EntityNotFoundException(getMessagePublicationIsNotFoundById(id));
     }
 
     Publication publication =
@@ -105,5 +116,9 @@ public class PublicationServiceImpl implements PublicationService {
     log.info("Started deleting publication by id");
     publicationRepository.deleteById(id);
     log.info("Finished deleting publication by id");
+  }
+
+  private String getMessagePublicationIsNotFoundById(long id) {
+    return String.format("Publication with id '%d' is not found!", id);
   }
 }
