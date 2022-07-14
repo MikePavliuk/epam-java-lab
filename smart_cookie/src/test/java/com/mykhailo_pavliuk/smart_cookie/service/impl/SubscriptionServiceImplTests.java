@@ -135,7 +135,10 @@ class SubscriptionServiceImplTests {
     assertThatExceptionOfType(EntityIllegalArgumentException.class)
         .isThrownBy(
             () -> subscriptionService.addSubscriptionToUser(user.getId(), publication.getId(), 3))
-        .withMessage("User is not allowed to have balance");
+        .withMessage(
+            String.format(
+                "User is not allowed to have balance! User's role is '%s'.",
+                user.getRole().getName()));
 
     verify(publicationRepository, times(1)).findById(publication.getId());
     verify(userRepository, times(0)).save(any());
@@ -150,6 +153,8 @@ class SubscriptionServiceImplTests {
     Publication publication = PublicationTestDataUtil.createPublication();
     int periodInMonths = 3;
     LocalDate startDate = LocalDate.now();
+    BigDecimal fullPrice =
+        publication.getPricePerMonth().multiply(BigDecimal.valueOf(periodInMonths));
 
     when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
     when(publicationRepository.findById(publication.getId())).thenReturn(Optional.of(publication));
@@ -159,7 +164,10 @@ class SubscriptionServiceImplTests {
             () ->
                 subscriptionService.addSubscriptionToUser(
                     user.getId(), publication.getId(), periodInMonths))
-        .withMessage("Not enough money to make a transaction");
+        .withMessage(
+            "User has not enough money to make a transaction! "
+                + fullPrice.subtract(user.getUserDetail().getBalance())
+                + "$ is missing!");
 
     verify(publicationRepository, times(1)).findById(publication.getId());
     verify(userRepository, times(0)).save(user);

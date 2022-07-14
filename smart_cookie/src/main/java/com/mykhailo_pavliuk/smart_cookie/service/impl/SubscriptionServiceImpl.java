@@ -39,14 +39,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     if (user.get().getUserDetail() == null) {
-      throw new EntityIllegalArgumentException("User is not allowed to have balance");
+      throw new EntityIllegalArgumentException(
+          String.format(
+              "User is not allowed to have balance! User's role is '%s'.",
+              user.get().getRole().getName()));
     }
 
     BigDecimal fullPrice =
         publication.get().getPricePerMonth().multiply(BigDecimal.valueOf(periodInMonths));
 
     if (user.get().getUserDetail().getBalance().compareTo(fullPrice) < 0) {
-      throw new EntityIllegalArgumentException("Not enough money to make a transaction");
+      throw new EntityIllegalArgumentException(
+          String.format(
+              "User has not enough money to make a transaction! %s$ is missing!",
+              fullPrice.subtract(user.get().getUserDetail().getBalance())));
     }
 
     user.get()
