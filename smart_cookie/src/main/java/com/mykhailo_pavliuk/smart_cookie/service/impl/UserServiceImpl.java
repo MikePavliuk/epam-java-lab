@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     if (user.get().getUserDetail() == null) {
-      throw new EntityIllegalArgumentException("User is not allowed to have balance");
+      throw new EntityIllegalArgumentException("User is not allowed to have balance!");
     }
 
     user.get().getUserDetail().setBalance(user.get().getUserDetail().getBalance().add(amount));

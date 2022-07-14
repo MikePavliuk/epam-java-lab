@@ -321,7 +321,7 @@ class UserServiceImplTests {
 
     assertThatExceptionOfType(EntityIllegalArgumentException.class)
         .isThrownBy(() -> userService.addFunds(UserTestDataUtil.ID, BigDecimal.TEN))
-        .withMessage("User is not allowed to have balance");
+        .withMessage("User is not allowed to have balance!");
 
     verify(userRepository, times(1)).findById(UserTestDataUtil.ID);
     verify(userRepository, times(0)).save(any());
