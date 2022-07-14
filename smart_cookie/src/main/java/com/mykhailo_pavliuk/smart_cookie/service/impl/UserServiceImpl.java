@@ -27,6 +27,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+  private static final String DEFAULT_CREATED_USER_ROLE_NAME =
+      RoleDto.SUBSCRIBER.name().toLowerCase();
+  private static final String DEFAULT_CREATED_USER_STATUS_NAME =
+      UserStatusDto.ACTIVE.name().toLowerCase();
+
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final UserStatusRepository userStatusRepository;
@@ -37,7 +42,8 @@ public class UserServiceImpl implements UserService {
     Optional<User> user = userRepository.findById(id);
     log.info("Finished getting user by id ({})", user);
 
-    return UserMapper.INSTANCE.mapUserToUserDto(user.orElseThrow(EntityNotFoundException::new));
+    return UserMapper.INSTANCE.mapUserToUserDto(
+        user.orElseThrow(() -> new EntityNotFoundException(getMessageUserIsNotFoundById(id))));
   }
 
   @Override
@@ -53,13 +59,20 @@ public class UserServiceImpl implements UserService {
 
     userDto.setRole(
         roleRepository
-            .findByName(RoleDto.SUBSCRIBER.name().toLowerCase())
-            .orElseThrow(EntityNotFoundException::new));
+            .findByName(DEFAULT_CREATED_USER_ROLE_NAME)
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format("Role '%s' is not found!", DEFAULT_CREATED_USER_ROLE_NAME))));
 
     userDto.setStatus(
         userStatusRepository
-            .findByName(UserStatusDto.ACTIVE.name().toLowerCase())
-            .orElseThrow(EntityNotFoundException::new));
+            .findByName(DEFAULT_CREATED_USER_STATUS_NAME)
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format(
+                            "User status '%s' is not found!", DEFAULT_CREATED_USER_STATUS_NAME))));
 
     User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
 
@@ -82,7 +95,7 @@ public class UserServiceImpl implements UserService {
     log.info("Started updating user by id");
 
     if (!userRepository.existsById(id)) {
-      throw new EntityNotFoundException("User with id " + id + " is not found");
+      throw new EntityNotFoundException(getMessageUserIsNotFoundById(id));
     }
 
     User user = UserMapper.INSTANCE.mapUserDtoToUser(userDto);
@@ -107,7 +120,11 @@ public class UserServiceImpl implements UserService {
     Optional<User> user = userRepository.findByEmail(email);
     log.info("Finished getting user by email ({})", user);
 
-    return UserMapper.INSTANCE.mapUserToUserDto(user.orElseThrow(EntityNotFoundException::new));
+    return UserMapper.INSTANCE.mapUserToUserDto(
+        user.orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("User with email '%s' is not found!", email))));
   }
 
   @Transactional
@@ -117,7 +134,7 @@ public class UserServiceImpl implements UserService {
     Optional<User> user = userRepository.findById(id);
 
     if (user.isEmpty()) {
-      throw new EntityNotFoundException();
+      throw new EntityNotFoundException(getMessageUserIsNotFoundById(id));
     }
 
     if (user.get().getUserDetail() == null) {
@@ -136,5 +153,9 @@ public class UserServiceImpl implements UserService {
   public boolean existsByEmail(String email) {
     log.info("Checking if exists by email");
     return userRepository.existsByEmail(email);
+  }
+
+  private String getMessageUserIsNotFoundById(long id) {
+    return String.format("User with id '%d' is not found!", id);
   }
 }
