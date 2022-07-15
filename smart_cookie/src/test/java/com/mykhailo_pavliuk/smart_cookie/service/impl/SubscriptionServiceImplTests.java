@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,7 @@ import com.mykhailo_pavliuk.smart_cookie.repository.UserRepository;
 import com.mykhailo_pavliuk.smart_cookie.test.util.PublicationTestDataUtil;
 import com.mykhailo_pavliuk.smart_cookie.test.util.UserTestDataUtil;
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +40,7 @@ class SubscriptionServiceImplTests {
   @Test
   void givenValidParameters_whenAddSubscription_thenReturnUserWithSubscription() {
     User userWithoutSubscription = UserTestDataUtil.createUser();
-    userWithoutSubscription.getUserDetail().setBalance(BigDecimal.valueOf(100));
+    userWithoutSubscription.getUserDetail().setBalance(UserTestDataUtil.SUBSCRIPTION_FULL_PRICE);
     User userWithSubscription = UserTestDataUtil.createUserWithSubscription();
     UserDto userDtoWithSubscription = UserTestDataUtil.createUserDtoWithSubscription();
 
@@ -58,7 +60,13 @@ class SubscriptionServiceImplTests {
     assertThat(resultUserDto, is(userDtoWithSubscription));
 
     verify(publicationRepository, times(1)).findById(PublicationTestDataUtil.ID);
-    verify(userRepository, times(1)).save(userWithSubscription);
+    verify(userRepository, times(1))
+        .save(
+            argThat(
+                (u) ->
+                    Objects.equals(
+                        u.getUserDetail().getBalance(),
+                        userWithSubscription.getUserDetail().getBalance())));
     verify(subscriptionRepository, times(1))
         .subscribeUserToPublication(
             UserTestDataUtil.ID,

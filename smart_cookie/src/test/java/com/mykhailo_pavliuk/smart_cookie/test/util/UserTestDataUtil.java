@@ -31,6 +31,10 @@ public class UserTestDataUtil {
   public static final int SUBSCRIPTION_PERIOD_IN_MONTHS = 3;
   public static final LocalDate SUBSCRIPTION_START_DATE = LocalDate.now();
 
+  public static final BigDecimal SUBSCRIPTION_FULL_PRICE =
+      PublicationTestDataUtil.PRICE_PER_MONTH.multiply(
+          BigDecimal.valueOf(SUBSCRIPTION_PERIOD_IN_MONTHS));
+
   public static User createUser() {
     return User.builder()
         .id(ID)
@@ -82,7 +86,7 @@ public class UserTestDataUtil {
 
   public static UserDto createUserDtoWithSubscription() {
     User user = UserTestDataUtil.createUser();
-    user.getUserDetail().setBalance(BigDecimal.valueOf(100));
+    user.getUserDetail().setBalance(SUBSCRIPTION_FULL_PRICE);
 
     UserDto userDtoWithSubscription = UserMapper.INSTANCE.mapUserToUserDto(user);
     userDtoWithSubscription.setSubscriptions(
@@ -95,12 +99,7 @@ public class UserTestDataUtil {
                 .build()));
     userDtoWithSubscription
         .getUserDetail()
-        .setBalance(
-            user.getUserDetail()
-                .getBalance()
-                .subtract(
-                    PublicationTestDataUtil.PRICE_PER_MONTH.multiply(
-                        BigDecimal.valueOf(SUBSCRIPTION_PERIOD_IN_MONTHS))));
+        .setBalance(user.getUserDetail().getBalance().subtract(SUBSCRIPTION_FULL_PRICE));
 
     return userDtoWithSubscription;
   }
