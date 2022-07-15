@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDetailDto;
 import com.mykhailo_pavliuk.smart_cookie.dto.UserDto;
+import com.mykhailo_pavliuk.smart_cookie.exception.ServiceException;
 import com.mykhailo_pavliuk.smart_cookie.model.enums.ErrorType;
 import com.mykhailo_pavliuk.smart_cookie.service.SubscriptionService;
 import com.mykhailo_pavliuk.smart_cookie.service.UserService;
@@ -230,5 +231,35 @@ class UserControllerTests {
         .andExpect(jsonPath("$.id").value(UserTestDataUtil.ID));
 
     verify(userService, times(1)).addFunds(UserTestDataUtil.ID, amount);
+  }
+
+  @Test
+  void givenServiceException_whenAnything_thenReturnError() throws Exception {
+    when(userService.getById(UserTestDataUtil.ID))
+        .thenThrow(new ServiceException("Service exception has occurred!") {});
+
+    mockMvc
+        .perform(get("/api/v1/users/" + UserTestDataUtil.ID))
+        .andDo(print())
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("Service exception has occurred!"))
+        .andExpect(jsonPath("$.errorType").value(ErrorType.FATAL_ERROR_TYPE.name()));
+  }
+
+  @Test
+  void givenAnyException_whenAnything_thenReturnError() throws Exception {
+    when(userService.addFunds(UserTestDataUtil.ID, BigDecimal.TEN))
+        .thenThrow(new RuntimeException("Exception has occurred!"));
+
+    mockMvc
+        .perform(
+            patch("/api/v1/users/" + UserTestDataUtil.ID + "/add-funds")
+                .queryParam("amount", String.valueOf(BigDecimal.TEN)))
+        .andDo(print())
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.message").value("Exception has occurred!"))
+        .andExpect(jsonPath("$.errorType").value(ErrorType.FATAL_ERROR_TYPE.name()));
   }
 }
